@@ -227,6 +227,10 @@ body {
     filter: var(--shadow-icon-urgent);
   }
 
+  :root[data-theme="dark"] .spidey-emblem {
+    filter: brightness(0) invert(0.95);
+  }
+
   .spidey-progress {
     height: 9px;
     border-radius: 9px;
