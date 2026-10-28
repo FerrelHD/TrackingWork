@@ -70,13 +70,12 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="flex flex-wrap gap-3.5 items-center justify-between mb-5">
       {/* Brand & Purpose Title */}
       <div className="flex gap-3.5 items-center">
-        {/* Real Spidey Mask Clay Logo */}
+        {/* Real Spidey Emblem Logo */}
         <div
-          className="w-14 h-14 rounded-[20px] grid place-items-center flex-shrink-0 cursor-pointer shadow-[6px_6px_14px_rgba(190,20,30,0.4),-4px_-4px_10px_var(--sh-l),inset_2px_2px_5px_rgba(255,255,255,0.45),inset_-3px_-4px_7px_rgba(90,0,10,0.35)]"
-          style={{ background: 'linear-gradient(145deg, #ff4a4f, #c9161c)' }}
+          className="w-14 h-14 rounded-full flex-shrink-0 cursor-pointer shadow-[5px_5px_12px_var(--sh-d),-4px_-4px_10px_var(--sh-l)] transition-transform hover:scale-105 active:scale-95"
           title="MagangHub Tracker"
         >
-          <SpideyIcon className="w-10 h-10" />
+          <SpideyIcon className="w-full h-full" />
         </div>
 
         <div>

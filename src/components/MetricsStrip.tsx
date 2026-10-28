@@ -34,7 +34,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
     <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
       {/* 1. Total Incaran */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 text-theme-ink group-hover:opacity-30 transition-opacity">
+        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
           <SpideyIcon className="w-8 h-8" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
@@ -53,7 +53,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       >
         <div
           className={`absolute right-3.5 top-3.5 transition-all ${
-            isSenseActive ? 'opacity-90 text-theme-red' : 'opacity-20 text-theme-ink'
+            isSenseActive ? 'opacity-100 scale-110 drop-shadow-[0_0_8px_rgba(230,36,41,0.6)]' : 'opacity-20 group-hover:opacity-35'
           }`}
         >
           <SpideyIcon className="w-8 h-8" />
@@ -68,7 +68,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
 
       {/* 3. On-Going Process */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 text-theme-ink group-hover:opacity-30 transition-opacity">
+        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
           <SpideyIcon className="w-8 h-8" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
@@ -81,7 +81,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
 
       {/* 4. Ready to Submit */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 text-theme-ink group-hover:opacity-30 transition-opacity">
+        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
           <SpideyIcon className="w-8 h-8" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">

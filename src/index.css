@@ -39,15 +39,6 @@ body {
   min-height: 100vh;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23808fc8' stroke-opacity='.18' stroke-width='1'%3E%3Cpath d='M0 0L160 160M160 0L0 160M80 0V160M0 80H160'/%3E%3Ccircle cx='80' cy='80' r='20'/%3E%3Ccircle cx='80' cy='80' r='44'/%3E%3Ccircle cx='80' cy='80' r='68'/%3E%3C/g%3E%3C/svg%3E");
-}
-
 @layer utilities {
   .font-comic {
     font-family: 'Bangers', 'Impact', sans-serif;
