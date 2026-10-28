@@ -184,7 +184,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       <div className="relative w-full max-w-[560px] spidey-clay p-6 sm:p-7 max-h-[92vh] overflow-y-auto z-10">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="font-comic text-3xl sm:text-4xl text-theme-ink tracking-wide leading-none">
+            <h2 className="font-extrabold text-2xl sm:text-3xl text-theme-ink tracking-tight leading-tight">
               {isEditing ? 'Ubah lowongan' : 'Tambah lowongan'}
             </h2>
             <div className="text-theme-mute text-xs font-bold mt-1">

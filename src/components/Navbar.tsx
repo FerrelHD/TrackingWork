@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div>
-          <h1 className="font-comic text-4xl sm:text-5xl leading-none tracking-wide text-theme-ink text-comic-shadow">
+          <h1 className="font-extrabold text-2xl sm:text-3xl tracking-tight text-theme-ink">
             MagangHub Tracker
           </h1>
           <div className="text-theme-mute text-xs sm:text-sm font-bold mt-1">

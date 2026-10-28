@@ -141,21 +141,21 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto grid place-items-center p-4">
       {/* Scrim Overlay */}
       <div
         onClick={onClose}
         className="fixed inset-0 bg-[#080c28]/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
       />
 
-      {/* Slide-over Clay Drawer */}
-      <aside
-        className="fixed top-0 right-0 bottom-0 w-full max-w-[500px] z-50 spidey-clay rounded-l-[30px] rounded-r-none overflow-y-auto p-6 sm:p-7 transform transition-transform ease-out duration-300"
+      {/* Centered Clay Modal */}
+      <div
+        className="relative w-full max-w-[580px] spidey-clay p-6 sm:p-7 max-h-[92vh] overflow-y-auto z-10 animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Header */}
         <div className="flex justify-between items-start gap-3">
           <div>
-            <h2 className="font-comic text-3xl sm:text-4xl text-theme-ink tracking-wide leading-none">
+            <h2 className="font-extrabold text-2xl sm:text-3xl text-theme-ink tracking-tight leading-tight">
               {app.companyName}
             </h2>
             <div className="text-theme-ink font-bold text-sm mt-1">{app.position}</div>
@@ -418,7 +418,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
             Selesai
           </button>
         </div>
-      </aside>
+      </div>
     </div>
   );
 };

@@ -37,7 +37,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
         <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-blue transition-opacity">
           <Briefcase className="w-8 h-8 stroke-[2.2]" />
         </div>
-        <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
+        <b className="font-extrabold text-3xl sm:text-4xl block text-theme-blue tracking-tight">
           {totalCount}
         </b>
         <span className="text-theme-mute text-xs sm:text-sm font-bold block mt-1">
@@ -60,7 +60,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
         >
           <Clock className="w-8 h-8 stroke-[2.2]" />
         </div>
-        <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
+        <b className="font-extrabold text-3xl sm:text-4xl block text-theme-red tracking-tight">
           {urgentDeadlines.length}
         </b>
         <span className="text-theme-mute text-xs sm:text-sm font-bold block mt-1">
@@ -73,7 +73,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
         <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-blue transition-opacity">
           <Activity className="w-8 h-8 stroke-[2.2]" />
         </div>
-        <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
+        <b className="font-extrabold text-3xl sm:text-4xl block text-theme-blue tracking-tight">
           {ongoingProcess.length}
         </b>
         <span className="text-theme-mute text-xs sm:text-sm font-bold block mt-1">
@@ -86,7 +86,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
         <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-red transition-opacity">
           <FileCheck className="w-8 h-8 stroke-[2.2]" />
         </div>
-        <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
+        <b className="font-extrabold text-3xl sm:text-4xl block text-theme-red tracking-tight">
           {readyToSubmit.length}
         </b>
         <span className="text-theme-mute text-xs sm:text-sm font-bold block mt-1">

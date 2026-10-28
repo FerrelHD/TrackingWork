@@ -94,7 +94,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   if (applications.length === 0) {
     return (
       <div className="spidey-clay p-12 sm:p-14 text-center">
-        <h3 className="font-comic text-2xl sm:text-3xl text-theme-ink tracking-wide text-comic-shadow">
+        <h3 className="font-extrabold text-xl sm:text-2xl text-theme-ink tracking-tight">
           Belum ada lowongan yang dicatat
         </h3>
         <p className="text-sm text-theme-mute font-bold mt-1.5 max-w-sm mx-auto">
@@ -129,7 +129,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
             }`}
           >
             {/* Column Header */}
-            <h3 className="font-comic text-2xl tracking-wide text-theme-ink m-1 mb-3 flex justify-between items-center">
+            <h3 className="font-extrabold text-lg tracking-tight text-theme-ink m-1 mb-3 flex justify-between items-center">
               <span>{column.title}</span>
               <span className="spidey-badge text-xs font-bold">{columnApps.length}</span>
             </h3>
