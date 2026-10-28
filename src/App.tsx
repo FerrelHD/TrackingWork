@@ -111,7 +111,7 @@ export const App: React.FC = () => {
   }, [applications, filter]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-spidey-canvas flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
       {/* Top Navbar */}
       <Navbar
         viewMode={viewMode}
@@ -173,7 +173,7 @@ export const App: React.FC = () => {
       />
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-200/80 bg-white/70 py-4 text-center text-xs text-slate-500">
+      <footer className="mt-auto border-t-2 border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-semibold">
         <p>
           MagangHub Tracker &bull; Dirancang untuk pencari magang mandiri &bull; Data tersimpan aman di browser Anda
         </p>
@@ -181,4 +181,3 @@ export const App: React.FC = () => {
     </div>
   );
 };
-

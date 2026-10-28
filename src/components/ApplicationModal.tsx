@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles } from 'lucide-react';
+import { X, Target } from 'lucide-react';
 import { Application, WorkMode, MainStatus, SelectionStage, RequirementItem } from '../types';
 
 interface ApplicationModalProps {
@@ -81,7 +81,6 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       setStages(initialData.selectionStages.map((s) => s.name));
       setRequirements(initialData.requirements.map((r) => r.label));
     } else {
-      // Default initial date: 7 days from today
       const future = new Date();
       future.setDate(future.getDate() + 7);
       const defaultDeadline = future.toISOString().split('T')[0];
@@ -139,7 +138,6 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
     const now = new Date().toISOString();
 
     const formattedStages: SelectionStage[] = stages.map((name, idx) => {
-      // Preserve status if editing and stage existed
       const existing = initialData?.selectionStages.find((s) => s.name === name);
       return {
         id: existing?.id || `stage-${Date.now()}-${idx}`,
@@ -180,21 +178,21 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
+      {/* Backdrop (Solid Dim, No Blur) */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in"
+        className="fixed inset-0 bg-slate-900/50 transition-opacity animate-in fade-in"
       />
 
       <div className="min-h-full flex items-center justify-center p-4">
-        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
+        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border-2 border-slate-300 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
           {/* Header */}
-          <div className="p-5 sm:p-6 border-b border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
+          <div className="p-5 sm:p-6 border-b-2 border-slate-200 bg-slate-50 flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+              <h3 className="text-lg font-extrabold text-spidey-ink tracking-tight">
                 {isEditing ? 'Ubah Informasi Lowongan' : 'Catat Lowongan Magang Baru'}
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 font-semibold mt-0.5">
                 {isEditing
                   ? 'Perbarui detail tahapan, berkas, atau informasi perusahaan'
                   : 'Tambahkan target magang dari MagangHub, LinkedIn, X, atau IG'}
@@ -202,9 +200,9 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl"
+              className="clay-btn-secondary p-2 text-slate-500 hover:text-slate-900"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 stroke-[2.5]" />
             </button>
           </div>
 
@@ -212,9 +210,9 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 max-h-[75vh] overflow-y-auto">
             {/* Quick Template Picker (for new entries) */}
             {!isEditing && (
-              <div className="bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100 mb-2">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900 mb-2">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <div className="bg-spidey-blue-light/50 p-3.5 rounded-xl border-2 border-spidey-blue-border mb-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-spidey-blue-dark mb-2">
+                  <Target className="w-4 h-4 text-spidey-blue stroke-[2.5]" />
                   <span>Isi Cepat Alur & Berkas dari Template:</span>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -223,7 +221,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                       type="button"
                       key={key}
                       onClick={() => applyTemplate(key)}
-                      className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-indigo-600 hover:text-white text-indigo-700 border border-indigo-200 rounded-lg shadow-2xs transition-all"
+                      className="clay-btn-secondary px-3 py-1 text-xs font-bold text-spidey-blue hover:text-spidey-blue-dark"
                     >
                       {TEMPLATES[key].label}
                     </button>
@@ -235,8 +233,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             {/* Row 1: Company & Role */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Nama Perusahaan <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+                  Nama Perusahaan <span className="text-spidey-red">*</span>
                 </label>
                 <input
                   type="text"
@@ -244,13 +242,13 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                   placeholder="misal: PT Telkom Indonesia"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Posisi Magang <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+                  Posisi Magang <span className="text-spidey-red">*</span>
                 </label>
                 <input
                   type="text"
@@ -258,7 +256,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                   placeholder="misal: UI/UX Designer Intern"
                   value={position}
                   onChange={(e) => setPosition(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
                 />
               </div>
             </div>
@@ -266,13 +264,13 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             {/* Row 2: Work Mode & City */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                   Mode Kerja
                 </label>
                 <select
                   value={workMode}
                   onChange={(e) => setWorkMode(e.target.value as WorkMode)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
                 >
                   <option value="Hybrid">Hybrid</option>
                   <option value="WFO">WFO (Work From Office)</option>
@@ -281,7 +279,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                   Kota / Wilayah Penempatan
                 </label>
                 <input
@@ -289,46 +287,46 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                   placeholder="misal: Jakarta Selatan atau Bandung"
                   value={locationCity}
                   onChange={(e) => setLocationCity(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
                 />
               </div>
             </div>
 
-            {/* Row 3: Deadline & Source URL */}
+            {/* Row 3: Deadline & Status */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Batas Akhir / Deadline <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+                  Batas Akhir / Deadline <span className="text-spidey-red">*</span>
                 </label>
                 <input
                   type="date"
                   required
                   value={deadlineDate}
                   onChange={(e) => setDeadlineDate(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                   Status Saat Ini
                 </label>
                 <select
                   value={mainStatus}
                   onChange={(e) => setMainStatus(e.target.value as MainStatus)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer"
+                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
                 >
                   <option value="wishlist">Wishlist / Belum Daftar</option>
                   <option value="applied">Applied / Administrasi</option>
                   <option value="assessment">Assessment / Tes</option>
                   <option value="interview">Interview</option>
-                  <option value="offering_rejected">Offering / Rejected</option>
+                  <option value="offering_rejected">Offering / Done</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                 Tautan Sumber (Web / LinkedIn / Instagram)
               </label>
               <input
@@ -336,28 +334,28 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                 placeholder="https://maganghub.kemnaker.go.id/..."
                 value={sourceUrl}
                 onChange={(e) => setSourceUrl(e.target.value)}
-                className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
               />
             </div>
 
             {/* Stages Manager */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                 Alur Tahapan Seleksi
               </label>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {stages.map((stg, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border-2 border-slate-300"
                   >
                     <span>{stg}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveStage(i)}
-                      className="text-slate-400 hover:text-rose-600"
+                      className="text-slate-400 hover:text-spidey-red"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
                     </button>
                   </span>
                 ))}
@@ -374,12 +372,12 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                       handleAddStage();
                     }
                   }}
-                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500"
+                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
                 />
                 <button
                   type="button"
                   onClick={handleAddStage}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl"
+                  className="clay-btn-secondary px-3 py-1.5 text-xs text-slate-700"
                 >
                   Tambah
                 </button>
@@ -388,22 +386,22 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
             {/* Requirements Manager */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                 Syarat / Berkas Dokumen
               </label>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {requirements.map((req, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border-2 border-emerald-300"
                   >
                     <span>{req}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveRequirement(i)}
-                      className="text-emerald-500 hover:text-rose-600"
+                      className="text-emerald-500 hover:text-spidey-red"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
                     </button>
                   </span>
                 ))}
@@ -420,12 +418,12 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                       handleAddRequirement();
                     }
                   }}
-                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-indigo-500"
+                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
                 />
                 <button
                   type="button"
                   onClick={handleAddRequirement}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl"
+                  className="clay-btn-secondary px-3 py-1.5 text-xs text-slate-700"
                 >
                   Tambah
                 </button>
@@ -434,7 +432,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
             {/* Notes */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
                 Catatan Awal
               </label>
               <textarea
@@ -442,22 +440,22 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                 placeholder="Catatan tambahan misal kontak alumni atau sumber info..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full text-xs p-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-medium"
               />
             </div>
 
             {/* Footer Buttons */}
-            <div className="pt-3 border-t border-slate-200 flex items-center justify-end space-x-3">
+            <div className="pt-3 border-t-2 border-slate-200 flex items-center justify-end space-x-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl"
+                className="clay-btn-secondary px-4 py-2 text-xs text-slate-600"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-600/20 transition-all"
+                className="clay-btn-primary px-5 py-2 text-xs"
               >
                 {isEditing ? 'Simpan Perubahan' : 'Tambahkan Lowongan'}
               </button>
