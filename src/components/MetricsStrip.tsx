@@ -1,7 +1,7 @@
 import React from 'react';
+import { Briefcase, Clock, Activity, FileCheck } from 'lucide-react';
 import { Application } from '../types';
 import { calculateRemainingDays } from '../utils/date';
-import { SpideyIcon } from './SpideyIcon';
 
 interface MetricsStripProps {
   applications: Application[];
@@ -34,8 +34,8 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
     <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
       {/* 1. Total Incaran */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
+        <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-blue transition-opacity">
+          <Briefcase className="w-8 h-8 stroke-[2.2]" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
           {totalCount}
@@ -53,12 +53,12 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       >
         <div
           className={`absolute right-3.5 top-3.5 transition-all ${
-            isSenseActive ? 'opacity-100 scale-110' : 'opacity-20 group-hover:opacity-35'
+            isSenseActive
+              ? 'opacity-100 scale-110 text-theme-red'
+              : 'opacity-25 group-hover:opacity-40 text-theme-mute'
           }`}
         >
-          <SpideyIcon
-            className={`w-8 h-8 ${isSenseActive ? 'spidey-icon-urgent' : 'spidey-icon-shadow'}`}
-          />
+          <Clock className="w-8 h-8 stroke-[2.2]" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
           {urgentDeadlines.length}
@@ -70,8 +70,8 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
 
       {/* 3. On-Going Process */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
+        <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-blue transition-opacity">
+          <Activity className="w-8 h-8 stroke-[2.2]" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
           {ongoingProcess.length}
@@ -83,8 +83,8 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
 
       {/* 4. Ready to Submit */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
-        <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
+        <div className="absolute right-3.5 top-3.5 opacity-25 group-hover:opacity-40 text-theme-red transition-opacity">
+          <FileCheck className="w-8 h-8 stroke-[2.2]" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
           {readyToSubmit.length}
