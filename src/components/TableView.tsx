@@ -1,7 +1,6 @@
 import React from 'react';
 import { Application, MainStatus } from '../types';
 import { calculateRemainingDays, formatRemainingDays } from '../utils/date';
-import { SpideyIcon } from './SpideyIcon';
 
 interface TableViewProps {
   applications: Application[];
@@ -60,14 +59,11 @@ export const TableView: React.FC<TableViewProps> = ({
 
   if (applications.length === 0) {
     return (
-      <div className="spidey-clay p-12 text-center">
-        <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4">
-          <SpideyIcon className="w-full h-full" />
-        </div>
+      <div className="spidey-clay p-12 sm:p-14 text-center">
         <h3 className="font-comic text-2xl sm:text-3xl text-theme-ink tracking-wide text-comic-shadow">
           Belum ada lowongan yang dicatat
         </h3>
-        <p className="text-sm text-theme-mute font-bold mt-1 max-w-sm mx-auto">
+        <p className="text-sm text-theme-mute font-bold mt-1.5 max-w-sm mx-auto">
           Mulai pasang jaring lamaranmu. Tambahkan lowongan magang incaran pertama sekarang.
         </p>
         {onOpenAddModal && (
