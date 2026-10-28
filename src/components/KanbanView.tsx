@@ -96,7 +96,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 overflow-x-auto pb-6">
+    <div className="flex lg:grid lg:grid-cols-5 gap-4 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0">
       {COLUMNS.map((column) => {
         const columnApps = applications.filter((app) => app.mainStatus === column.id);
         const isTarget = activeDropColumn === column.id;
@@ -107,7 +107,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
             onDragOver={(e) => handleDragOver(e, column.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, column.id)}
-            className={`spidey-clay p-3.5 min-h-[300px] flex flex-col transition-all ${
+            className={`spidey-clay p-3.5 min-h-[300px] flex flex-col transition-all w-[84vw] sm:w-[320px] lg:w-auto shrink-0 lg:shrink snap-center ${
               isTarget ? 'outline-3 outline-dashed outline-theme-red -outline-offset-4' : ''
             }`}
           >
