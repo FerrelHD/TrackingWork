@@ -35,7 +35,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       {/* 1. Total Incaran */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
         <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8" />
+          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
           {totalCount}
@@ -53,10 +53,12 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       >
         <div
           className={`absolute right-3.5 top-3.5 transition-all ${
-            isSenseActive ? 'opacity-100 scale-110 drop-shadow-[0_0_8px_rgba(230,36,41,0.6)]' : 'opacity-20 group-hover:opacity-35'
+            isSenseActive ? 'opacity-100 scale-110' : 'opacity-20 group-hover:opacity-35'
           }`}
         >
-          <SpideyIcon className="w-8 h-8" />
+          <SpideyIcon
+            className={`w-8 h-8 ${isSenseActive ? 'spidey-icon-urgent' : 'spidey-icon-shadow'}`}
+          />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
           {urgentDeadlines.length}
@@ -69,7 +71,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       {/* 3. On-Going Process */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
         <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8" />
+          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-blue tracking-wide">
           {ongoingProcess.length}
@@ -82,7 +84,7 @@ export const MetricsStrip: React.FC<MetricsStripProps> = ({ applications }) => {
       {/* 4. Ready to Submit */}
       <div className="spidey-clay p-5 relative overflow-hidden group">
         <div className="absolute right-3.5 top-3.5 opacity-20 group-hover:opacity-35 transition-opacity">
-          <SpideyIcon className="w-8 h-8" />
+          <SpideyIcon className="w-8 h-8 spidey-icon-shadow" />
         </div>
         <b className="font-comic text-4xl sm:text-5xl block text-theme-red tracking-wide">
           {readyToSubmit.length}

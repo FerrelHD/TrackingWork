@@ -92,7 +92,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           onClick={() => setViewMode('table')}
           className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition-all ${
             viewMode === 'table'
-              ? 'spidey-btn-blue text-white shadow-sm'
+              ? 'spidey-btn-blue text-white'
               : 'text-theme-mute hover:text-theme-ink'
           }`}
         >
@@ -102,7 +102,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           onClick={() => setViewMode('kanban')}
           className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition-all ${
             viewMode === 'kanban'
-              ? 'spidey-btn-blue text-white shadow-sm'
+              ? 'spidey-btn-blue text-white'
               : 'text-theme-mute hover:text-theme-ink'
           }`}
         >

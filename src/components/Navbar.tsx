@@ -72,17 +72,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="flex gap-3.5 items-center">
         {/* Real Spidey Emblem Logo */}
         <div
-          className="w-14 h-14 rounded-full flex-shrink-0 cursor-pointer shadow-[5px_5px_12px_var(--sh-d),-4px_-4px_10px_var(--sh-l)] transition-transform hover:scale-105 active:scale-95"
+          className="w-14 h-14 rounded-full flex-shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95"
           title="MagangHub Tracker"
         >
-          <SpideyIcon className="w-full h-full" />
+          <SpideyIcon className="w-full h-full spidey-icon-shadow" />
         </div>
 
         <div>
-          <h1
-            className="font-comic text-4xl sm:text-5xl leading-none tracking-wide text-theme-ink"
-            style={{ textShadow: '3px 3px 0 var(--red)' }}
-          >
+          <h1 className="font-comic text-4xl sm:text-5xl leading-none tracking-wide text-theme-ink text-comic-shadow">
             MagangHub Tracker
           </h1>
           <div className="text-theme-mute text-xs sm:text-sm font-bold mt-1">

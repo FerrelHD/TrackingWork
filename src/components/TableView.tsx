@@ -37,13 +37,7 @@ export const TableView: React.FC<TableViewProps> = ({
     if (countdown.status === 'urgent') {
       const label = days === 0 ? 'Hari ini' : `H-${days}`;
       return (
-        <span
-          className="spidey-badge font-extrabold text-white"
-          style={{
-            background: 'var(--red)',
-            boxShadow: '2px 2px 6px rgba(190, 20, 30, 0.4)',
-          }}
-        >
+        <span className="spidey-badge spidey-badge-urgent font-extrabold">
           {label}
         </span>
       );
@@ -67,10 +61,10 @@ export const TableView: React.FC<TableViewProps> = ({
   if (applications.length === 0) {
     return (
       <div className="spidey-clay p-12 text-center">
-        <div className="w-16 h-16 mx-auto mb-3 opacity-30 text-theme-ink">
-          <SpideyIcon className="w-full h-full" />
+        <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4">
+          <SpideyIcon className="w-full h-full spidey-icon-embossed" />
         </div>
-        <h3 className="font-comic text-2xl text-theme-ink tracking-wide">
+        <h3 className="font-comic text-2xl sm:text-3xl text-theme-ink tracking-wide text-comic-shadow">
           Belum ada lowongan yang dicatat
         </h3>
         <p className="text-sm text-theme-mute font-bold mt-1 max-w-sm mx-auto">

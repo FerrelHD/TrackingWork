@@ -10,10 +10,41 @@
   --red: #e62429;
   --blue: #2b4fd8;
   --navy: #14204f;
+
+  /* Shadow raw components - Light Mode */
   --sh-d: rgba(40, 60, 130, 0.28);
   --sh-l: rgba(255, 255, 255, 0.9);
-  --line: rgba(20, 32, 79, 0.12);
-  --web: rgba(20, 32, 79, 0.07);
+  --sh-inset-d: rgba(0, 0, 0, 0.06);
+  --sh-inset-l: rgba(255, 255, 255, 0.95);
+
+  /* Clay Surfaces (multi-layer outer + thin inset puffy highlight) */
+  --shadow-raised: 9px 9px 20px var(--sh-d), -7px -7px 16px var(--sh-l), inset 2px 2px 5px var(--sh-inset-l), inset -3px -4px 8px var(--sh-inset-d);
+  --shadow-card: 5px 5px 12px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -1px -2px 4px var(--sh-inset-d);
+  --shadow-card-hover: 7px 7px 16px var(--sh-d), -5px -5px 12px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -1px -2px 4px var(--sh-inset-d);
+
+  /* Pressed state for input, textarea, and recessed trays */
+  --shadow-pressed: inset 4px 4px 9px var(--sh-d), inset -4px -4px 8px var(--sh-l);
+  --shadow-badge: inset 2px 2px 4px var(--sh-d), inset -2px -2px 4px var(--sh-l);
+  --shadow-badge-urgent: 2px 2px 6px rgba(190, 20, 30, 0.4), inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+
+  /* Buttons: standard, red, blue with normal, hover, and active inset */
+  --shadow-btn: 5px 5px 11px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -2px -2px 5px var(--sh-inset-d);
+  --shadow-btn-hover: 6px 6px 14px var(--sh-d), -5px -5px 11px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -2px -2px 5px var(--sh-inset-d);
+  --shadow-btn-active: inset 3px 3px 7px var(--sh-d), inset -3px -3px 6px var(--sh-l);
+
+  --shadow-btn-red: 5px 5px 12px rgba(190, 20, 30, 0.4), -3px -3px 8px var(--sh-l), inset 2px 2px 4px rgba(255, 255, 255, 0.45), inset -3px -3px 6px rgba(90, 0, 10, 0.35);
+  --shadow-btn-red-active: inset 3px 3px 7px rgba(90, 0, 10, 0.7), inset -2px -2px 5px rgba(255, 255, 255, 0.2);
+
+  --shadow-btn-blue: 3px 3px 9px rgba(30, 60, 180, 0.45), -2px -2px 7px var(--sh-l), inset 1px 1px 3px rgba(255, 255, 255, 0.45), inset -2px -2px 5px rgba(10, 20, 90, 0.35);
+  --shadow-btn-blue-active: inset 3px 3px 7px rgba(10, 20, 90, 0.7), inset -2px -2px 5px rgba(255, 255, 255, 0.2);
+
+  /* Spidey Icon drop-shadows (two-layer drop-shadow following the icon shape) */
+  --shadow-icon: drop-shadow(3px 3px 5px var(--sh-d)) drop-shadow(-2px -2px 4px var(--sh-l));
+  --shadow-icon-embossed: drop-shadow(6px 6px 12px var(--sh-d)) drop-shadow(-4px -4px 8px var(--sh-l)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  --shadow-icon-urgent: drop-shadow(0 0 10px rgba(230, 36, 41, 0.75)) drop-shadow(3px 3px 6px var(--sh-d));
+
+  /* Comic hard text shadow */
+  --text-shadow-comic: 3px 3px 0 var(--red);
 }
 
 :root[data-theme="dark"] {
@@ -21,10 +52,48 @@
   --card: #1b2552;
   --ink: #eef1ff;
   --mute: #9aa6d8;
-  --sh-d: rgba(0, 0, 10, 0.55);
-  --sh-l: rgba(110, 130, 230, 0.16);
-  --line: rgba(255, 255, 255, 0.1);
-  --web: rgba(255, 255, 255, 0.05);
+  --navy: #090e24;
+
+  /* Dark mode: Bayangan gelap lebih pekat, highlight terang diganti biru-navy redup (bukan putih!) */
+  --sh-d: rgba(0, 4, 16, 0.75);
+  --sh-l: rgba(70, 95, 180, 0.22);
+  --sh-inset-d: rgba(0, 0, 0, 0.45);
+  --sh-inset-l: rgba(90, 115, 210, 0.25);
+
+  --shadow-raised: 9px 9px 22px var(--sh-d), -7px -7px 16px var(--sh-l), inset 2px 2px 5px var(--sh-inset-l), inset -3px -4px 8px var(--sh-inset-d);
+  --shadow-card: 5px 5px 13px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -1px -2px 4px var(--sh-inset-d);
+  --shadow-card-hover: 7px 7px 17px var(--sh-d), -5px -5px 12px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -1px -2px 4px var(--sh-inset-d);
+  
+  --shadow-pressed: inset 4px 4px 10px var(--sh-d), inset -4px -4px 8px var(--sh-l);
+  --shadow-badge: inset 2px 2px 4px var(--sh-d), inset -2px -2px 4px var(--sh-l);
+  --shadow-badge-urgent: 2px 2px 8px rgba(0, 0, 0, 0.65), inset 1px 1px 2px rgba(255, 150, 150, 0.3);
+
+  --shadow-btn: 5px 5px 12px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -2px -2px 5px var(--sh-inset-d);
+  --shadow-btn-hover: 6px 6px 15px var(--sh-d), -5px -5px 11px var(--sh-l), inset 1px 1px 3px var(--sh-inset-l), inset -2px -2px 5px var(--sh-inset-d);
+  --shadow-btn-active: inset 3px 3px 8px var(--sh-d), inset -3px -3px 6px var(--sh-l);
+
+  --shadow-btn-red: 5px 5px 14px rgba(0, 0, 0, 0.65), -3px -3px 8px rgba(70, 95, 180, 0.25), inset 2px 2px 4px rgba(255, 180, 180, 0.25), inset -3px -3px 6px rgba(60, 0, 5, 0.65);
+  --shadow-btn-red-active: inset 3px 3px 8px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(255, 150, 150, 0.15);
+
+  --shadow-btn-blue: 3px 3px 10px rgba(0, 0, 0, 0.65), -2px -2px 7px rgba(70, 95, 180, 0.25), inset 1px 1px 3px rgba(160, 190, 255, 0.3), inset -2px -2px 5px rgba(5, 10, 50, 0.65);
+  --shadow-btn-blue-active: inset 3px 3px 8px rgba(0, 0, 0, 0.8), inset -2px -2px 5px rgba(160, 190, 255, 0.15);
+
+  --shadow-icon: drop-shadow(3px 3px 6px var(--sh-d)) drop-shadow(-2px -2px 4px var(--sh-l));
+  --shadow-icon-embossed: drop-shadow(6px 6px 14px var(--sh-d)) drop-shadow(-4px -4px 8px var(--sh-l)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  --shadow-icon-urgent: drop-shadow(0 0 12px rgba(230, 36, 41, 0.85)) drop-shadow(3px 3px 8px var(--sh-d));
+}
+
+@media (max-width: 820px) {
+  :root,
+  :root[data-theme="dark"] {
+    --text-shadow-comic: 2px 2px 0 var(--red);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spider-sense {
+    animation: none !important;
+  }
 }
 
 * {
@@ -45,26 +114,31 @@ body {
     letter-spacing: 1px;
   }
 
+  .text-comic-shadow {
+    text-shadow: var(--text-shadow-comic);
+  }
+
   .spidey-clay {
     background-color: var(--card);
     border-radius: 26px;
-    box-shadow: 9px 9px 20px var(--sh-d), -7px -7px 16px var(--sh-l), inset 2px 2px 5px var(--sh-l), inset -3px -4px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-raised);
   }
 
   .spidey-card {
     background-color: var(--bg);
     border-radius: 20px;
-    box-shadow: 5px 5px 11px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-l);
+    box-shadow: var(--shadow-card);
     transition: transform 0.12s, box-shadow 0.12s;
   }
   .spidey-card:hover {
     transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .spidey-press {
     background-color: var(--bg);
     border-radius: 16px;
-    box-shadow: inset 4px 4px 9px var(--sh-d), inset -4px -4px 8px var(--sh-l);
+    box-shadow: var(--shadow-pressed);
   }
 
   .spidey-btn {
@@ -75,27 +149,44 @@ body {
     color: var(--ink);
     border-radius: 16px;
     background-color: var(--card);
-    box-shadow: 5px 5px 11px var(--sh-d), -4px -4px 9px var(--sh-l), inset 1px 1px 3px var(--sh-l);
+    box-shadow: var(--shadow-btn);
     transition: transform 0.12s, box-shadow 0.12s;
   }
   .spidey-btn:hover {
     transform: translateY(-1px);
+    box-shadow: var(--shadow-btn-hover);
   }
   .spidey-btn:active {
     transform: translateY(1px);
-    box-shadow: inset 3px 3px 7px var(--sh-d), inset -3px -3px 6px var(--sh-l);
+    box-shadow: var(--shadow-btn-active);
   }
 
   .spidey-btn-red {
     color: #FFFFFF !important;
     background: linear-gradient(145deg, #ff4a4f, #c9161c) !important;
-    box-shadow: 5px 5px 12px rgba(190, 20, 30, 0.4), -3px -3px 8px var(--sh-l), inset 2px 2px 4px rgba(255, 255, 255, 0.4), inset -3px -3px 6px rgba(90, 0, 10, 0.3) !important;
+    box-shadow: var(--shadow-btn-red) !important;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .spidey-btn-red:hover {
+    transform: translateY(-1px);
+  }
+  .spidey-btn-red:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-btn-red-active) !important;
   }
 
   .spidey-btn-blue {
     color: #FFFFFF !important;
     background: linear-gradient(145deg, #3d63f0, #2441b8) !important;
-    box-shadow: 3px 3px 8px rgba(30, 60, 180, 0.45), inset 1px 1px 3px rgba(255, 255, 255, 0.4) !important;
+    box-shadow: var(--shadow-btn-blue) !important;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .spidey-btn-blue:hover {
+    transform: translateY(-1px);
+  }
+  .spidey-btn-blue:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-btn-blue-active) !important;
   }
 
   .spidey-badge {
@@ -105,9 +196,27 @@ body {
     font-size: 12px;
     font-weight: 800;
     background-color: var(--bg);
-    box-shadow: inset 2px 2px 4px var(--sh-d), inset -2px -2px 4px var(--sh-l);
+    box-shadow: var(--shadow-badge);
     color: var(--mute);
     white-space: nowrap;
+  }
+
+  .spidey-badge-urgent {
+    background: var(--red) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--shadow-badge-urgent) !important;
+  }
+
+  .spidey-icon-shadow {
+    filter: var(--shadow-icon);
+  }
+
+  .spidey-icon-embossed {
+    filter: var(--shadow-icon-embossed);
+  }
+
+  .spidey-icon-urgent {
+    filter: var(--shadow-icon-urgent);
   }
 
   .spidey-progress {
@@ -136,10 +245,10 @@ body {
 
 @keyframes sense {
   0% {
-    box-shadow: 9px 9px 20px var(--sh-d), -7px -7px 16px var(--sh-l), 0 0 0 0 rgba(230, 36, 41, 0.55);
+    box-shadow: var(--shadow-raised), 0 0 0 0 rgba(230, 36, 41, 0.55);
   }
   70%, 100% {
-    box-shadow: 9px 9px 20px var(--sh-d), -7px -7px 16px var(--sh-l), 0 0 0 16px rgba(230, 36, 41, 0);
+    box-shadow: var(--shadow-raised), 0 0 0 16px rgba(230, 36, 41, 0);
   }
 }
 

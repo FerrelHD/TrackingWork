@@ -68,13 +68,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
     if (countdown.status === 'urgent') {
       const label = days === 0 ? 'Hari ini' : `H-${days}`;
       return (
-        <span
-          className="spidey-badge font-extrabold text-white"
-          style={{
-            background: 'var(--red)',
-            boxShadow: '2px 2px 6px rgba(190, 20, 30, 0.4)',
-          }}
-        >
+        <span className="spidey-badge spidey-badge-urgent font-extrabold">
           {label}
         </span>
       );
@@ -170,7 +164,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                         value={app.mainStatus}
                         onChange={(e) => onUpdateStatus(app.id, e.target.value as MainStatus)}
                         aria-label="Pindah status"
-                        className="font-extrabold text-[11px] border-0 rounded-lg px-2 py-1 bg-theme-card text-theme-ink max-w-[125px] cursor-pointer outline-none shadow-2xs"
+                        className="font-extrabold text-[11px] border-0 rounded-lg px-2 py-1 bg-theme-card text-theme-ink max-w-[125px] cursor-pointer outline-none"
                       >
                         {COLUMNS.map((c) => (
                           <option key={c.id} value={c.id}>

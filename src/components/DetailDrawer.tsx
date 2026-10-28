@@ -150,7 +150,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
       {/* Slide-over Clay Drawer */}
       <aside
-        className="fixed top-0 right-0 bottom-0 w-full max-w-[500px] z-50 spidey-clay rounded-l-[30px] rounded-r-none overflow-y-auto p-6 sm:p-7 shadow-2xl transform transition-transform ease-out duration-300"
+        className="fixed top-0 right-0 bottom-0 w-full max-w-[500px] z-50 spidey-clay rounded-l-[30px] rounded-r-none overflow-y-auto p-6 sm:p-7 transform transition-transform ease-out duration-300"
       >
         {/* Header */}
         <div className="flex justify-between items-start gap-3">
@@ -170,13 +170,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           <span className="spidey-badge font-extrabold text-theme-blue">{app.workMode}</span>
           <span className="spidey-badge">{app.locationCity}</span>
           {countdown.status === 'urgent' ? (
-            <span
-              className="spidey-badge font-extrabold text-white"
-              style={{
-                background: 'var(--red)',
-                boxShadow: '2px 2px 6px rgba(190, 20, 30, 0.4)',
-              }}
-            >
+            <span className="spidey-badge spidey-badge-urgent font-extrabold">
               {days === 0 ? 'Hari ini' : `H-${days}`}
             </span>
           ) : (
@@ -260,7 +254,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   }`}
                 >
                   <div
-                    className={`w-7 h-7 rounded-full flex-shrink-0 grid place-items-center text-xs font-extrabold shadow-sm ${
+                    className={`w-7 h-7 rounded-full flex-shrink-0 grid place-items-center text-xs font-extrabold ${
                       s.isCurrent
                         ? 'bg-theme-red text-white'
                         : s.isCompleted
@@ -364,7 +358,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                       type="checkbox"
                       checked={r.isCompleted}
                       onChange={() => handleToggleRequirement(i)}
-                      className="spidey-press appearance-none w-5 h-5 rounded-lg flex-shrink-0 cursor-pointer checked:bg-theme-red checked:shadow-sm"
+                      className="spidey-press appearance-none w-5 h-5 rounded-lg flex-shrink-0 cursor-pointer checked:bg-theme-red"
                     />
                     <span
                       className={`text-xs font-bold truncate select-none ${
