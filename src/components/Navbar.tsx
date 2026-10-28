@@ -1,30 +1,29 @@
 import React, { useRef } from 'react';
 import { 
-  Plus, 
-  LayoutGrid, 
-  Table as TableIcon, 
   Download, 
   Upload, 
   RotateCcw,
-  Target
+  Moon,
+  Sun
 } from 'lucide-react';
 import { Application } from '../types';
 import { exportBackupJSON, resetToDefaultData, saveStoredApplications } from '../utils/storage';
+import { SpideyIcon } from './SpideyIcon';
 
 interface NavbarProps {
-  viewMode: 'table' | 'kanban';
-  setViewMode: (mode: 'table' | 'kanban') => void;
   onOpenAddModal: () => void;
   applications: Application[];
   onDataReload: (apps: Application[]) => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  viewMode,
-  setViewMode,
   onOpenAddModal,
   applications,
   onDataReload,
+  theme,
+  onToggleTheme,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,101 +60,103 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const handleReset = () => {
-    if (window.confirm('Kembalikan ke data contoh default? Perubahan kustom Anda akan di-reset.')) {
+    if (window.confirm('Kosongkan semua data lowongan dan mulai dari awal?')) {
       const defaultData = resetToDefaultData();
       onDataReload(defaultData);
     }
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b-2 border-slate-200/90 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xs">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* Brand & Purpose Title */}
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-spidey-blue border-2 border-spidey-blue-dark shadow-[0_3px_0_0_#1E40AF] flex items-center justify-center text-yellow-300 flex-shrink-0">
-            <Target className="w-5 h-5 stroke-[2.5]" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-1.5">
-              <h1 className="text-xl font-extrabold tracking-tight text-spidey-ink">
-                MagangHub<span className="text-spidey-blue">.Tracker</span>
-              </h1>
-            </div>
-            <p className="text-xs text-slate-500 font-semibold">
-              Radar dan pantauan pendaftaran magang mandiri
-            </p>
-          </div>
+    <header className="flex flex-wrap gap-3.5 items-center justify-between mb-5">
+      {/* Brand & Purpose Title */}
+      <div className="flex gap-3.5 items-center">
+        {/* Real Spidey Mask Clay Logo */}
+        <div
+          className="w-14 h-14 rounded-[20px] grid place-items-center flex-shrink-0 cursor-pointer shadow-[6px_6px_14px_rgba(190,20,30,0.4),-4px_-4px_10px_var(--sh-l),inset_2px_2px_5px_rgba(255,255,255,0.45),inset_-3px_-4px_7px_rgba(90,0,10,0.35)]"
+          style={{ background: 'linear-gradient(145deg, #ff4a4f, #c9161c)' }}
+          title="MagangHub Tracker"
+        >
+          <SpideyIcon className="w-10 h-10" />
         </div>
 
-        {/* View Switcher & Action CTA */}
-        <div className="flex items-center flex-wrap gap-2.5 sm:gap-3">
-          {/* View Mode Toggle (Solid Clay Switcher with High Contrast Dark Text) */}
-          <div className="flex items-center p-1 bg-slate-100 rounded-xl border-2 border-slate-200">
-            <button
-              onClick={() => setViewMode('table')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all duration-150 ${
-                viewMode === 'table'
-                  ? 'bg-white text-spidey-ink border-2 border-spidey-blue shadow-[0_2px_0_0_#1D4ED8]'
-                  : 'text-slate-600 hover:text-slate-900 border-2 border-transparent'
-              }`}
-            >
-              <TableIcon className="w-3.5 h-3.5 stroke-[2.2]" />
-              <span>Tabel</span>
-            </button>
-            <button
-              onClick={() => setViewMode('kanban')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all duration-150 ${
-                viewMode === 'kanban'
-                  ? 'bg-white text-spidey-ink border-2 border-spidey-blue shadow-[0_2px_0_0_#1D4ED8]'
-                  : 'text-slate-600 hover:text-slate-900 border-2 border-transparent'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5 stroke-[2.2]" />
-              <span>Kanban</span>
-            </button>
-          </div>
-
-          {/* Backup / Export / Import Tools */}
-          <div className="flex items-center space-x-1.5">
-            <button
-              onClick={handleExport}
-              title="Download Cadangan JSON"
-              className="clay-btn-secondary p-2 text-slate-700"
-            >
-              <Download className="w-4 h-4 stroke-[2.2]" />
-            </button>
-            <button
-              onClick={handleImportClick}
-              title="Restore dari JSON"
-              className="clay-btn-secondary p-2 text-slate-700"
-            >
-              <Upload className="w-4 h-4 stroke-[2.2]" />
-            </button>
-            <button
-              onClick={handleReset}
-              title="Reset ke Sampel Awal"
-              className="clay-btn-secondary p-2 text-slate-700 hover:text-spidey-red hover:border-spidey-red"
-            >
-              <RotateCcw className="w-4 h-4 stroke-[2.2]" />
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".json"
-              className="hidden"
-            />
-          </div>
-
-          {/* Primary CTA (Solid Web-Blue with High-Contrast Text) */}
-          <button
-            onClick={onOpenAddModal}
-            className="clay-btn-primary flex items-center space-x-2 px-4 py-2 text-sm text-yellow-300"
+        <div>
+          <h1
+            className="font-comic text-4xl sm:text-5xl leading-none tracking-wide text-theme-ink"
+            style={{ textShadow: '3px 3px 0 var(--red)' }}
           >
-            <Plus className="w-4 h-4 stroke-[2.8]" />
-            <span>Catat Lowongan</span>
-          </button>
+            MagangHub Tracker
+          </h1>
+          <div className="text-theme-mute text-xs sm:text-sm font-bold mt-1">
+            Rapikan jaring lamaranmu, jangan ada deadline yang lolos.
+          </div>
         </div>
+      </div>
+
+      {/* Action Bar */}
+      <div className="flex gap-2 items-center flex-wrap">
+        {/* Theme Switcher */}
+        <button
+          onClick={onToggleTheme}
+          className="spidey-btn px-3.5 py-2 text-xs flex items-center gap-1.5"
+          title="Ganti Tema (Terang / Gelap)"
+        >
+          {theme === 'dark' ? (
+            <>
+              <Sun className="w-4 h-4 text-amber-400 stroke-[2.5]" />
+              <span>Terang</span>
+            </>
+          ) : (
+            <>
+              <Moon className="w-4 h-4 text-indigo-700 stroke-[2.5]" />
+              <span>Gelap</span>
+            </>
+          )}
+        </button>
+
+        {/* Export JSON */}
+        <button
+          onClick={handleExport}
+          className="spidey-btn px-3.5 py-2 text-xs flex items-center gap-1.5"
+          title="Download Cadangan JSON"
+        >
+          <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>Export JSON</span>
+        </button>
+
+        {/* Import JSON */}
+        <button
+          onClick={handleImportClick}
+          className="spidey-btn px-3.5 py-2 text-xs flex items-center gap-1.5"
+          title="Restore dari file JSON"
+        >
+          <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>Import JSON</span>
+        </button>
+
+        {/* Reset */}
+        <button
+          onClick={handleReset}
+          className="spidey-btn p-2 text-theme-mute hover:text-theme-red"
+          title="Kosongkan data"
+        >
+          <RotateCcw className="w-4 h-4 stroke-[2.5]" />
+        </button>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".json"
+          className="hidden"
+        />
+
+        {/* Add Application Button */}
+        <button
+          onClick={onOpenAddModal}
+          className="spidey-btn spidey-btn-red px-5 py-2.5 text-sm font-extrabold flex items-center gap-1.5"
+        >
+          <span>+ Tambah lowongan</span>
+        </button>
       </div>
     </header>
   );

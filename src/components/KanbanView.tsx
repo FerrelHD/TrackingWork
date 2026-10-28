@@ -1,10 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  Clock, 
-  MapPin, 
-  CheckSquare, 
-  MoveRight
-} from 'lucide-react';
 import { Application, MainStatus } from '../types';
 import { calculateRemainingDays, formatRemainingDays } from '../utils/date';
 
@@ -17,41 +11,14 @@ interface KanbanViewProps {
 interface ColumnConfig {
   id: MainStatus;
   title: string;
-  dotColor: string;
-  badgeBg: string;
 }
 
 const COLUMNS: ColumnConfig[] = [
-  {
-    id: 'wishlist',
-    title: 'Wishlist / Belum Daftar',
-    dotColor: 'bg-slate-400',
-    badgeBg: 'bg-slate-100 text-slate-700 border-2 border-slate-200',
-  },
-  {
-    id: 'applied',
-    title: 'Applied / Administrasi',
-    dotColor: 'bg-spidey-blue',
-    badgeBg: 'bg-spidey-blue-light text-spidey-blue-dark border-2 border-spidey-blue-border',
-  },
-  {
-    id: 'assessment',
-    title: 'Assessment / Tes',
-    dotColor: 'bg-spidey-amber',
-    badgeBg: 'bg-spidey-amber-light text-spidey-amber border-2 border-spidey-amber-border',
-  },
-  {
-    id: 'interview',
-    title: 'Interview',
-    dotColor: 'bg-purple-600',
-    badgeBg: 'bg-purple-50 text-purple-800 border-2 border-purple-200',
-  },
-  {
-    id: 'offering_rejected',
-    title: 'Offering / Done',
-    dotColor: 'bg-emerald-600',
-    badgeBg: 'bg-emerald-50 text-emerald-800 border-2 border-emerald-200',
-  },
+  { id: 'wishlist', title: 'Wishlist' },
+  { id: 'applied', title: 'Applied' },
+  { id: 'assessment', title: 'Assessment' },
+  { id: 'interview', title: 'Interview' },
+  { id: 'offering_rejected', title: 'Offering / Rejected' },
 ];
 
 export const KanbanView: React.FC<KanbanViewProps> = ({
@@ -88,8 +55,48 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
     setActiveDropColumn(null);
   };
 
+  const renderDeadlineBadge = (app: Application) => {
+    if (app.mainStatus === 'offering_rejected') {
+      return <span className="spidey-badge">Selesai</span>;
+    }
+    const days = calculateRemainingDays(app.deadlineDate);
+    const countdown = formatRemainingDays(days);
+
+    if (countdown.status === 'expired') {
+      return <span className="spidey-badge line-through text-theme-mute">Lewat</span>;
+    }
+    if (countdown.status === 'urgent') {
+      const label = days === 0 ? 'Hari ini' : `H-${days}`;
+      return (
+        <span
+          className="spidey-badge font-extrabold text-white"
+          style={{
+            background: 'var(--red)',
+            boxShadow: '2px 2px 6px rgba(190, 20, 30, 0.4)',
+          }}
+        >
+          {label}
+        </span>
+      );
+    }
+    return <span className="spidey-badge text-theme-blue">{days} hari lagi</span>;
+  };
+
+  const getWorkModeClass = (mode: string) => {
+    switch (mode) {
+      case 'WFO':
+        return 'text-theme-blue';
+      case 'Hybrid':
+        return 'text-[#8A35C8]';
+      case 'WFH':
+        return 'text-[#0F8A6A]';
+      default:
+        return 'text-theme-mute';
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start pb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 overflow-x-auto pb-6">
       {COLUMNS.map((column) => {
         const columnApps = applications.filter((app) => app.mainStatus === column.id);
         const isTarget = activeDropColumn === column.id;
@@ -100,32 +107,22 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
             onDragOver={(e) => handleDragOver(e, column.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, column.id)}
-            className={`flex flex-col bg-white rounded-2xl p-3 border-2 transition-all min-h-[500px] shadow-[0_3px_0_0_#CBD5E1] ${
-              isTarget
-                ? 'border-spidey-blue bg-spidey-blue-light/30 shadow-[0_5px_0_0_#93C5FD]'
-                : 'border-slate-300/90'
+            className={`spidey-clay p-3.5 min-h-[300px] flex flex-col transition-all ${
+              isTarget ? 'outline-3 outline-dashed outline-theme-red -outline-offset-4' : ''
             }`}
           >
             {/* Column Header */}
-            <div className="flex items-center justify-between px-2 py-2 mb-2 border-b-2 border-slate-100">
-              <div className="flex items-center space-x-2">
-                <span className={`w-3 h-3 rounded-full border border-black/10 ${column.dotColor}`} />
-                <h3 className="text-xs font-extrabold text-slate-800 tracking-tight">
-                  {column.title}
-                </h3>
-              </div>
-              <span className={`text-xs font-extrabold px-2 py-0.5 rounded-lg ${column.badgeBg}`}>
-                {columnApps.length}
-              </span>
-            </div>
+            <h3 className="font-comic text-2xl tracking-wide text-theme-ink m-1 mb-3 flex justify-between items-center">
+              <span>{column.title}</span>
+              <span className="spidey-badge text-xs font-bold">{columnApps.length}</span>
+            </h3>
 
             {/* Cards Container */}
-            <div className="flex flex-col space-y-3 flex-1">
+            <div className="flex flex-col gap-3 flex-1">
               {columnApps.map((app) => {
-                const remainingDays = calculateRemainingDays(app.deadlineDate);
-                const countdown = formatRemainingDays(remainingDays);
                 const totalReq = app.requirements?.length || 0;
                 const completedReq = app.requirements?.filter((r) => r.isCompleted).length || 0;
+                const isFull = totalReq > 0 && completedReq === totalReq;
                 const isDragging = draggedAppId === app.id;
 
                 return (
@@ -134,88 +131,50 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                     draggable
                     onDragStart={(e) => handleDragStart(e, app.id)}
                     onClick={() => onSelectApplication(app)}
-                    className={`clay-interactive p-3.5 cursor-grab active:cursor-grabbing select-none relative ${
-                      isDragging ? 'opacity-40 scale-95 border-dashed border-spidey-blue' : ''
+                    className={`spidey-card p-3.5 cursor-grab active:cursor-grabbing select-none ${
+                      isDragging ? 'opacity-40 scale-95' : ''
                     }`}
                   >
-                    {/* Header: Company & Work Mode */}
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <div className="font-bold text-sm text-slate-900 group-hover:text-spidey-blue line-clamp-1">
-                        {app.companyName}
-                      </div>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border-2 border-slate-200 flex-shrink-0">
+                    <b className="text-theme-ink font-bold block text-sm">{app.companyName}</b>
+                    <small className="text-theme-mute font-semibold block text-xs mt-0.5">
+                      {app.position}
+                    </small>
+
+                    {/* Badges */}
+                    <div className="flex gap-1.5 flex-wrap my-2.5">
+                      <span className={`spidey-badge ${getWorkModeClass(app.workMode)}`}>
                         {app.workMode}
                       </span>
+                      {renderDeadlineBadge(app)}
                     </div>
 
-                    {/* Position */}
-                    <div className="text-xs text-slate-600 font-semibold line-clamp-1 mb-2.5">
-                      {app.position}
-                    </div>
-
-                    {/* Metadata: Location & Countdown */}
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-2.5 pt-2 border-t border-slate-150">
-                      <div className="flex items-center space-x-1 truncate max-w-[120px] font-medium">
-                        <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0 stroke-[2.2]" />
-                        <span className="truncate">{app.locationCity}</span>
-                      </div>
+                    {/* Progress Bar */}
+                    <div className="spidey-progress w-full mb-2">
                       <div
-                        className={`flex items-center space-x-1 font-bold ${
-                          countdown.status === 'urgent'
-                            ? 'text-spidey-red'
-                            : countdown.status === 'warning'
-                            ? 'text-spidey-amber'
-                            : 'text-slate-600'
-                        }`}
-                      >
-                        <Clock className="w-3 h-3 stroke-[2.2]" />
-                        <span>{countdown.text}</span>
-                      </div>
+                        className={`spidey-progress-bar ${isFull ? 'spidey-progress-bar-full' : ''}`}
+                        style={{
+                          width: `${totalReq === 0 ? 0 : (completedReq / totalReq) * 100}%`,
+                        }}
+                      />
                     </div>
 
-                    {/* Requirements Progress Bar */}
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 mb-1">
-                        <span className="flex items-center gap-1">
-                          <CheckSquare className="w-3 h-3 text-slate-500 stroke-[2.2]" />
-                          Berkas
-                        </span>
-                        <span className={totalReq > 0 && completedReq === totalReq ? 'text-emerald-700' : 'text-slate-800'}>
-                          {completedReq}/{totalReq}
-                        </span>
-                      </div>
-                      <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
-                        <div
-                          className={`h-full rounded-full transition-all duration-200 ${
-                            totalReq > 0 && completedReq === totalReq
-                              ? 'bg-emerald-600'
-                              : 'bg-spidey-blue'
-                          }`}
-                          style={{
-                            width: `${totalReq === 0 ? 0 : (completedReq / totalReq) * 100}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Quick Move Status Selector */}
+                    {/* Footer Row: Progress & Quick Changer */}
                     <div
-                      className="flex items-center justify-between pt-2 border-t border-slate-100"
+                      className="flex justify-between items-center gap-1.5 pt-1 text-xs"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="flex items-center space-x-1 text-[11px] text-slate-500 font-bold">
-                        <MoveRight className="w-3 h-3 stroke-[2.2]" />
-                        <span>Pindah:</span>
-                      </div>
+                      <small className="text-theme-mute font-bold">
+                        {completedReq}/{totalReq} Berkas
+                      </small>
                       <select
                         value={app.mainStatus}
                         onChange={(e) => onUpdateStatus(app.id, e.target.value as MainStatus)}
-                        aria-label={`Ubah status untuk ${app.companyName}`}
-                        className="text-[11px] font-bold bg-slate-50 hover:bg-slate-100 text-slate-800 border-2 border-slate-200 rounded-lg px-2 py-0.5 focus:outline-none focus:border-spidey-blue cursor-pointer"
+                        aria-label="Pindah status"
+                        className="font-extrabold text-[11px] border-0 rounded-lg px-2 py-1 bg-theme-card text-theme-ink max-w-[125px] cursor-pointer outline-none shadow-2xs"
                       >
-                        {COLUMNS.map((col) => (
-                          <option key={col.id} value={col.id}>
-                            {col.title.split('/')[0].trim()}
+                        {COLUMNS.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.title}
                           </option>
                         ))}
                       </select>
@@ -225,7 +184,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
               })}
 
               {columnApps.length === 0 && (
-                <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center text-xs text-slate-400 font-semibold my-auto">
+                <div className="text-theme-mute text-center p-6 text-xs font-semibold my-auto">
                   Tarik kartu ke sini
                 </div>
               )}

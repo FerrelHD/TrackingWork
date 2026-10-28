@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Application, FilterState, MainStatus } from './types';
 import { getStoredApplications, saveStoredApplications } from './utils/storage';
 import { calculateRemainingDays } from './utils/date';
@@ -16,6 +16,17 @@ export const App: React.FC = () => {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
+
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('maganghub_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('maganghub_theme', theme);
+  }, [theme]);
 
   const [filter, setFilter] = useState<FilterState>({
     search: '',
@@ -111,54 +122,63 @@ export const App: React.FC = () => {
   }, [applications, filter]);
 
   return (
-    <div className="min-h-screen bg-spidey-canvas flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Top Navbar */}
-      <Navbar
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        onOpenAddModal={() => {
-          setEditingApp(null);
-          setIsModalOpen(true);
-        }}
-        applications={applications}
-        onDataReload={updateApplications}
-      />
+    <div className="relative z-10 min-h-screen flex flex-col font-sans text-theme-ink">
+      <div className="max-w-[1240px] w-full mx-auto px-4 py-5 sm:px-6 flex-1 flex flex-col">
+        {/* Top Header / Navbar */}
+        <Navbar
+          onOpenAddModal={() => {
+            setEditingApp(null);
+            setIsModalOpen(true);
+          }}
+          applications={applications}
+          onDataReload={updateApplications}
+          theme={theme}
+          onToggleTheme={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
+        />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {/* Bento Strip */}
+        {/* Bento Metrics Strip */}
         <MetricsStrip applications={applications} />
 
-        {/* Filter & Search Bar */}
+        {/* Tools: Filter, Search, and View Mode Switcher */}
         <FilterBar
           filter={filter}
           setFilter={setFilter}
-          totalResults={filteredAndSortedApplications.length}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
         />
 
         {/* Views: Table or Kanban */}
-        {viewMode === 'table' ? (
-          <TableView
-            applications={filteredAndSortedApplications}
-            onSelectApplication={(app) => setSelectedApp(app)}
-            onEditApplication={(app) => {
-              setEditingApp(app);
-              setIsModalOpen(true);
-            }}
-            onDeleteApplication={handleDeleteApplication}
-            onOpenAddModal={() => {
-              setEditingApp(null);
-              setIsModalOpen(true);
-            }}
-          />
-        ) : (
-          <KanbanView
-            applications={filteredAndSortedApplications}
-            onSelectApplication={(app) => setSelectedApp(app)}
-            onUpdateStatus={handleUpdateStatus}
-          />
-        )}
-      </main>
+        <main className="flex-1">
+          {viewMode === 'table' ? (
+            <TableView
+              applications={filteredAndSortedApplications}
+              onSelectApplication={(app) => setSelectedApp(app)}
+              onEditApplication={(app) => {
+                setEditingApp(app);
+                setIsModalOpen(true);
+              }}
+              onDeleteApplication={handleDeleteApplication}
+              onOpenAddModal={() => {
+                setEditingApp(null);
+                setIsModalOpen(true);
+              }}
+            />
+          ) : (
+            <KanbanView
+              applications={filteredAndSortedApplications}
+              onSelectApplication={(app) => setSelectedApp(app)}
+              onUpdateStatus={handleUpdateStatus}
+            />
+          )}
+        </main>
+
+        {/* Footer */}
+        <footer className="mt-8 py-4 text-center text-xs font-bold text-theme-mute">
+          <p>
+            MagangHub Tracker &bull; Dirancang untuk pencari magang mandiri &bull; Data tersimpan aman di browser Anda
+          </p>
+        </footer>
+      </div>
 
       {/* Slide-over Detail Drawer */}
       <DetailDrawer
@@ -175,13 +195,6 @@ export const App: React.FC = () => {
         onSave={handleSaveApplication}
         initialData={editingApp}
       />
-
-      {/* Footer */}
-      <footer className="mt-auto border-t-2 border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-semibold">
-        <p>
-          MagangHub Tracker &bull; Dirancang untuk pencari magang mandiri &bull; Data tersimpan aman di browser Anda
-        </p>
-      </footer>
     </div>
   );
 };

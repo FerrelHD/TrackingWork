@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Target } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 import { Application, WorkMode, MainStatus, SelectionStage, RequirementItem } from '../types';
 
 interface ApplicationModalProps {
@@ -59,13 +59,9 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   const [mainStatus, setMainStatus] = useState<MainStatus>('wishlist');
   const [notes, setNotes] = useState('');
 
-  const [stages, setStages] = useState<string[]>(['CV Screening', 'Interview User']);
+  const [stages, setStages] = useState<string[]>(['Seleksi Administrasi', 'Online Test', 'Interview']);
   const [newStageInput, setNewStageInput] = useState('');
-  const [requirements, setRequirements] = useState<string[]>([
-    'CV ATS',
-    'Transkrip Nilai',
-    'Surat Pengantar Kampus',
-  ]);
+  const [requirements, setRequirements] = useState<string[]>(['CV ATS', 'Transkrip Nilai', 'Surat Rekomendasi']);
   const [newReqInput, setNewReqInput] = useState('');
 
   useEffect(() => {
@@ -88,13 +84,13 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       setCompanyName('');
       setPosition('');
       setWorkMode('Hybrid');
-      setLocationCity('Jakarta');
+      setLocationCity('Jakarta Selatan');
       setSourceUrl('');
       setDeadlineDate(defaultDeadline);
       setMainStatus('wishlist');
       setNotes('');
-      setStages(['Administrasi MagangHub', 'Tes Online', 'Wawancara User', 'Offering']);
-      setRequirements(['CV ATS', 'Transkrip Nilai', 'Surat Rekomendasi Kampus']);
+      setStages(['Seleksi Administrasi', 'Online Test', 'Interview']);
+      setRequirements(['CV ATS', 'Transkrip Nilai', 'Surat Rekomendasi']);
     }
   }, [initialData, isOpen]);
 
@@ -131,7 +127,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyName.trim() || !position.trim() || !deadlineDate) {
-      alert('Mohon isi nama perusahaan, posisi, dan tanggal deadline.');
+      alert('Mohon isi nama perusahaan, posisi, dan batas akhir pendaftaran.');
       return;
     }
 
@@ -161,7 +157,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       companyName: companyName.trim(),
       position: position.trim(),
       workMode,
-      locationCity: locationCity.trim() || 'Jakarta',
+      locationCity: locationCity.trim() || '-',
       sourceUrl: sourceUrl.trim() || undefined,
       deadlineDate,
       mainStatus,
@@ -177,291 +173,257 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop (Solid Dim, No Blur) */}
+    <div className="fixed inset-0 z-50 overflow-y-auto grid place-items-center p-4">
+      {/* Scrim Overlay */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/50 transition-opacity animate-in fade-in"
+        className="fixed inset-0 bg-[#080c28]/50 backdrop-blur-xs transition-opacity animate-in fade-in"
       />
 
-      <div className="min-h-full flex items-center justify-center p-4">
-        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border-2 border-slate-300 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
-          {/* Header */}
-          <div className="p-5 sm:p-6 border-b-2 border-slate-200 bg-slate-50 flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-extrabold text-spidey-ink tracking-tight">
-                {isEditing ? 'Ubah Informasi Lowongan' : 'Catat Lowongan Magang Baru'}
-              </h3>
-              <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                {isEditing
-                  ? 'Perbarui detail tahapan, berkas, atau informasi perusahaan'
-                  : 'Tambahkan target magang dari MagangHub, LinkedIn, X, atau IG'}
-              </p>
+      {/* Clay Modal Form */}
+      <div className="relative w-full max-w-[560px] spidey-clay p-6 sm:p-7 max-h-[92vh] overflow-y-auto shadow-2xl z-10">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="font-comic text-3xl sm:text-4xl text-theme-ink tracking-wide leading-none">
+              {isEditing ? 'Ubah lowongan' : 'Tambah lowongan'}
+            </h2>
+            <div className="text-theme-mute text-xs font-bold mt-1">
+              Catat info lowongan incaranmu dari MagangHub, LinkedIn, atau sosmed.
             </div>
-            <button
-              onClick={onClose}
-              className="clay-btn-secondary p-2 text-slate-500 hover:text-slate-900"
-            >
-              <X className="w-5 h-5 stroke-[2.5]" />
-            </button>
+          </div>
+          <button onClick={onClose} className="spidey-btn p-1.5 text-theme-mute hover:text-theme-ink">
+            <X className="w-5 h-5 stroke-[2.5]" />
+          </button>
+        </div>
+
+        {/* Templates Picker (for quick populate) */}
+        {!isEditing && (
+          <div className="spidey-press p-3 rounded-2xl mb-4">
+            <div className="text-xs font-extrabold text-theme-blue flex items-center gap-1.5 mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Isi Cepat Alur & Berkas dari Template:</span>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {(Object.keys(TEMPLATES) as Array<keyof typeof TEMPLATES>).map((key) => (
+                <button
+                  type="button"
+                  key={key}
+                  onClick={() => applyTemplate(key)}
+                  className="spidey-btn px-2.5 py-1 text-xs font-bold text-theme-ink hover:text-theme-blue"
+                >
+                  {TEMPLATES[key].label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">
+              Perusahaan <span className="text-theme-red">*</span>
+            </label>
+            <input
+              required
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="misal: Tokopedia, Telkom, Shopee"
+              className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none"
+            />
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 max-h-[75vh] overflow-y-auto">
-            {/* Quick Template Picker (for new entries) */}
-            {!isEditing && (
-              <div className="bg-spidey-blue-light/50 p-3.5 rounded-xl border-2 border-spidey-blue-border mb-2">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-spidey-blue-dark mb-2">
-                  <Target className="w-4 h-4 text-spidey-blue stroke-[2.5]" />
-                  <span>Isi Cepat Alur & Berkas dari Template:</span>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {(Object.keys(TEMPLATES) as Array<keyof typeof TEMPLATES>).map((key) => (
-                    <button
-                      type="button"
-                      key={key}
-                      onClick={() => applyTemplate(key)}
-                      className="clay-btn-secondary px-3 py-1 text-xs font-bold text-spidey-blue hover:text-spidey-blue-dark"
-                    >
-                      {TEMPLATES[key].label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">
+              Posisi <span className="text-theme-red">*</span>
+            </label>
+            <input
+              required
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="misal: Frontend Engineer Intern"
+              className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none"
+            />
+          </div>
 
-            {/* Row 1: Company & Role */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Nama Perusahaan <span className="text-spidey-red">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="misal: PT Telkom Indonesia"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Posisi Magang <span className="text-spidey-red">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="misal: UI/UX Designer Intern"
-                  value={position}
-                  onChange={(e) => setPosition(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
-                />
-              </div>
-            </div>
-
-            {/* Row 2: Work Mode & City */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Mode Kerja
-                </label>
-                <select
-                  value={workMode}
-                  onChange={(e) => setWorkMode(e.target.value as WorkMode)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
-                >
-                  <option value="Hybrid">Hybrid</option>
-                  <option value="WFO">WFO (Work From Office)</option>
-                  <option value="WFH">WFH (Work From Home / Remote)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Kota / Wilayah Penempatan
-                </label>
-                <input
-                  type="text"
-                  placeholder="misal: Jakarta Selatan atau Bandung"
-                  value={locationCity}
-                  onChange={(e) => setLocationCity(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
-                />
-              </div>
-            </div>
-
-            {/* Row 3: Deadline & Status */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Batas Akhir / Deadline <span className="text-spidey-red">*</span>
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={deadlineDate}
-                  onChange={(e) => setDeadlineDate(e.target.value)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                  Status Saat Ini
-                </label>
-                <select
-                  value={mainStatus}
-                  onChange={(e) => setMainStatus(e.target.value as MainStatus)}
-                  className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold cursor-pointer"
-                >
-                  <option value="wishlist">Wishlist / Belum Daftar</option>
-                  <option value="applied">Applied / Administrasi</option>
-                  <option value="assessment">Assessment / Tes</option>
-                  <option value="interview">Interview</option>
-                  <option value="offering_rejected">Offering / Done</option>
-                </select>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                Tautan Sumber (Web / LinkedIn / Instagram)
+              <label className="block text-theme-mute font-bold mb-1.5">Kota</label>
+              <input
+                value={locationCity}
+                onChange={(e) => setLocationCity(e.target.value)}
+                placeholder="Jakarta Selatan"
+                className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-theme-mute font-bold mb-1.5">Mode kerja</label>
+              <select
+                value={workMode}
+                onChange={(e) => setWorkMode(e.target.value as WorkMode)}
+                className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none cursor-pointer"
+              >
+                <option value="Hybrid">Hybrid</option>
+                <option value="WFO">WFO</option>
+                <option value="WFH">WFH</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-theme-mute font-bold mb-1.5">
+                Deadline <span className="text-theme-red">*</span>
               </label>
               <input
-                type="url"
-                placeholder="https://maganghub.kemnaker.go.id/..."
-                value={sourceUrl}
-                onChange={(e) => setSourceUrl(e.target.value)}
-                className="w-full text-xs px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
+                type="date"
+                required
+                value={deadlineDate}
+                onChange={(e) => setDeadlineDate(e.target.value)}
+                className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none cursor-pointer"
               />
             </div>
-
-            {/* Stages Manager */}
             <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                Alur Tahapan Seleksi
-              </label>
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {stages.map((stg, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800 border-2 border-slate-300"
-                  >
-                    <span>{stg}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveStage(i)}
-                      className="text-slate-400 hover:text-spidey-red"
-                    >
-                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Tambah tahap baru..."
-                  value={newStageInput}
-                  onChange={(e) => setNewStageInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddStage();
-                    }
-                  }}
-                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddStage}
-                  className="clay-btn-secondary px-3 py-1.5 text-xs text-slate-700"
-                >
-                  Tambah
-                </button>
-              </div>
+              <label className="block text-theme-mute font-bold mb-1.5">Status awal</label>
+              <select
+                value={mainStatus}
+                onChange={(e) => setMainStatus(e.target.value as MainStatus)}
+                className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none cursor-pointer"
+              >
+                <option value="wishlist">Wishlist</option>
+                <option value="applied">Applied</option>
+                <option value="assessment">Assessment</option>
+                <option value="interview">Interview</option>
+                <option value="offering_rejected">Offering / Rejected</option>
+              </select>
             </div>
+          </div>
 
-            {/* Requirements Manager */}
-            <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                Syarat / Berkas Dokumen
-              </label>
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {requirements.map((req, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border-2 border-emerald-300"
-                  >
-                    <span>{req}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveRequirement(i)}
-                      className="text-emerald-500 hover:text-spidey-red"
-                    >
-                      <X className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Tambah syarat berkas..."
-                  value={newReqInput}
-                  onChange={(e) => setNewReqInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddRequirement();
-                    }
-                  }}
-                  className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-semibold"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddRequirement}
-                  className="clay-btn-secondary px-3 py-1.5 text-xs text-slate-700"
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">Link sumber</label>
+            <input
+              type="url"
+              value={sourceUrl}
+              onChange={(e) => setSourceUrl(e.target.value)}
+              placeholder="https://..."
+              className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none"
+            />
+          </div>
+
+          {/* Stages List */}
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">Alur tahapan seleksi</label>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {stages.map((stg, i) => (
+                <span
+                  key={i}
+                  className="spidey-badge flex items-center gap-1.5 text-theme-ink font-bold py-1 px-2.5"
                 >
-                  Tambah
-                </button>
-              </div>
+                  <span>{stg}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveStage(i)}
+                    className="text-theme-mute hover:text-theme-red"
+                  >
+                    <X className="w-3 h-3 stroke-[2.5]" />
+                  </button>
+                </span>
+              ))}
             </div>
-
-            {/* Notes */}
-            <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
-                Catatan Awal
-              </label>
-              <textarea
-                rows={2}
-                placeholder="Catatan tambahan misal kontak alumni atau sumber info..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue font-medium"
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Tambah tahap baru..."
+                value={newStageInput}
+                onChange={(e) => setNewStageInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddStage();
+                  }
+                }}
+                className="spidey-press flex-1 text-xs px-3 py-2 text-theme-ink font-bold outline-none"
               />
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="pt-3 border-t-2 border-slate-200 flex items-center justify-end space-x-3">
               <button
                 type="button"
-                onClick={onClose}
-                className="clay-btn-secondary px-4 py-2 text-xs text-slate-600"
+                onClick={handleAddStage}
+                className="spidey-btn px-3 py-1 text-xs font-bold"
               >
-                Batal
-              </button>
-              <button
-                type="submit"
-                className="clay-btn-primary px-5 py-2 text-xs text-yellow-300 font-extrabold"
-              >
-                {isEditing ? 'Simpan Perubahan' : 'Tambahkan Lowongan'}
+                Tambah
               </button>
             </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Requirements List */}
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">Syarat berkas dokumen</label>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {requirements.map((req, i) => (
+                <span
+                  key={i}
+                  className="spidey-badge flex items-center gap-1.5 text-theme-blue font-bold py-1 px-2.5"
+                >
+                  <span>{req}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveRequirement(i)}
+                    className="text-theme-mute hover:text-theme-red"
+                  >
+                    <X className="w-3 h-3 stroke-[2.5]" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Tambah berkas (misal: Portofolio)..."
+                value={newReqInput}
+                onChange={(e) => setNewReqInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddRequirement();
+                  }
+                }}
+                className="spidey-press flex-1 text-xs px-3 py-2 text-theme-ink font-bold outline-none"
+              />
+              <button
+                type="button"
+                onClick={handleAddRequirement}
+                className="spidey-btn px-3 py-1 text-xs font-bold"
+              >
+                Tambah
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-theme-mute font-bold mb-1.5">Catatan tambahan</label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Kontak HR, bocoran materi soal, dll..."
+              className="spidey-press w-full text-theme-ink font-bold text-xs p-3 outline-none resize-none"
+            />
+          </div>
+
+          <div className="flex gap-3 justify-end items-center pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="spidey-btn px-4 py-2.5 text-xs font-bold text-theme-mute hover:text-theme-ink"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="spidey-btn spidey-btn-red px-6 py-2.5 text-xs font-extrabold"
+            >
+              {isEditing ? 'Simpan perubahan' : 'Simpan lowongan'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

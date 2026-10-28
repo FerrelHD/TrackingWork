@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  MapPin, 
-  ExternalLink, 
-  Clock, 
-  CheckCircle2, 
-  Circle, 
-  Plus, 
-  Trash2, 
-  FileText, 
-  ListChecks, 
-  GitCommit,
-  Calendar
-} from 'lucide-react';
+import { Plus, Trash2, ExternalLink } from 'lucide-react';
 import { Application, MainStatus, SelectionStage, RequirementItem } from '../types';
-import { calculateRemainingDays, formatRemainingDays, formatDisplayDate } from '../utils/date';
+import { calculateRemainingDays, formatRemainingDays } from '../utils/date';
 
 interface DetailDrawerProps {
   application: Application | null;
@@ -22,6 +9,14 @@ interface DetailDrawerProps {
   onSave: (updated: Application) => void;
   onDelete: (id: string) => void;
 }
+
+const STAGES: Array<[MainStatus, string]> = [
+  ['wishlist', 'Wishlist'],
+  ['applied', 'Applied'],
+  ['assessment', 'Assessment'],
+  ['interview', 'Interview'],
+  ['offering_rejected', 'Offering / Rejected'],
+];
 
 export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   application,
@@ -39,7 +34,6 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
     setApp(application);
   }, [application]);
 
-  // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -50,13 +44,13 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
   if (!app) return null;
 
-  const remainingDays = calculateRemainingDays(app.deadlineDate);
-  const countdown = formatRemainingDays(remainingDays);
   const totalReq = app.requirements?.length || 0;
   const completedReq = app.requirements?.filter((r) => r.isCompleted).length || 0;
-  const progressPercent = totalReq === 0 ? 0 : Math.round((completedReq / totalReq) * 100);
+  const isFull = totalReq > 0 && completedReq === totalReq;
 
-  // Status Updater
+  const days = calculateRemainingDays(app.deadlineDate);
+  const countdown = formatRemainingDays(days);
+
   const handleStatusChange = (status: MainStatus) => {
     const updated = { ...app, mainStatus: status, updatedAt: new Date().toISOString() };
     setApp(updated);
@@ -64,25 +58,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   };
 
   // Stepper handlers
-  const handleSetCurrentStage = (stageId: string) => {
-    const updatedStages = app.selectionStages.map((stage) => {
-      if (stage.id === stageId) {
-        return { ...stage, isCurrent: true };
-      }
-      return { ...stage, isCurrent: false };
-    });
-    const updated = { ...app, selectionStages: updatedStages, updatedAt: new Date().toISOString() };
-    setApp(updated);
-    onSave(updated);
-  };
-
-  const handleToggleStageCompleted = (stageId: string) => {
-    const updatedStages = app.selectionStages.map((stage) => {
-      if (stage.id === stageId) {
-        return { ...stage, isCompleted: !stage.isCompleted };
-      }
-      return stage;
-    });
+  const handleStepClick = (index: number) => {
+    const updatedStages = app.selectionStages.map((s, j) => ({
+      ...s,
+      isCompleted: j < index,
+      isCurrent: j === index,
+    }));
     const updated = { ...app, selectionStages: updatedStages, updatedAt: new Date().toISOString() };
     setApp(updated);
     onSave(updated);
@@ -116,13 +97,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   };
 
   // Requirements handlers
-  const handleToggleRequirement = (reqId: string) => {
-    const updatedReqs = app.requirements.map((req) => {
-      if (req.id === reqId) {
-        return { ...req, isCompleted: !req.isCompleted };
-      }
-      return req;
-    });
+  const handleToggleRequirement = (index: number) => {
+    const updatedReqs = [...app.requirements];
+    updatedReqs[index] = {
+      ...updatedReqs[index],
+      isCompleted: !updatedReqs[index].isCompleted,
+    };
     const updated = { ...app, requirements: updatedReqs, updatedAt: new Date().toISOString() };
     setApp(updated);
     onSave(updated);
@@ -154,7 +134,6 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
     onSave(updated);
   };
 
-  // Notes handler
   const handleNotesChange = (text: string) => {
     const updated = { ...app, notes: text, updatedAt: new Date().toISOString() };
     setApp(updated);
@@ -163,386 +142,289 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop (Solid Dim, No Blur) */}
+      {/* Scrim Overlay */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-slate-900/50 transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-[#080c28]/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-xl bg-white shadow-2xl border-l-4 border-slate-300 flex flex-col h-full transform transition-all ease-out duration-300">
-          {/* Drawer Header */}
-          <div className="p-5 sm:p-6 border-b-2 border-slate-200 bg-slate-50">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-spidey-blue bg-spidey-blue-light border-2 border-spidey-blue-border px-2.5 py-0.5 rounded-lg">
-                    {app.workMode}
-                  </span>
-                  <span className="text-xs text-slate-600 font-semibold flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 stroke-[2.2]" />
-                    {app.locationCity}
-                  </span>
-                </div>
-                <h2 className="text-xl font-extrabold text-spidey-ink tracking-tight leading-snug">
-                  {app.companyName}
-                </h2>
-                <p className="text-sm font-bold text-slate-600 mt-0.5">
-                  {app.position}
-                </p>
-
-                {app.sourceUrl && (
-                  <div className="mt-2.5 flex items-center">
-                    <a
-                      href={app.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="clay-btn-secondary inline-flex items-center gap-1.5 text-xs px-3 py-1 text-spidey-blue hover:text-spidey-blue-dark"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 stroke-[2.2]" />
-                      <span>Buka Tautan Sumber Lowongan</span>
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              {/* Close Button */}
-              <button
-                onClick={onClose}
-                className="clay-btn-secondary p-2 text-slate-500 hover:text-slate-900"
-                title="Tutup (Esc)"
-              >
-                <X className="w-5 h-5 stroke-[2.5]" />
-              </button>
-            </div>
-
-            {/* Quick Status Bar & Deadline */}
-            <div className="mt-5 grid grid-cols-2 gap-3 pt-4 border-t-2 border-slate-200">
-              <div className="flex flex-col">
-                <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                  Status Saat Ini
-                </span>
-                <select
-                  value={app.mainStatus}
-                  onChange={(e) => handleStatusChange(e.target.value as MainStatus)}
-                  aria-label="Status pendaftaran"
-                  className="w-full text-xs font-bold bg-white border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 focus:outline-none focus:border-spidey-blue cursor-pointer shadow-2xs"
-                >
-                  <option value="wishlist">Wishlist / Belum Daftar</option>
-                  <option value="applied">Applied / Administrasi</option>
-                  <option value="assessment">Assessment / Tes</option>
-                  <option value="interview">Interview</option>
-                  <option value="offering_rejected">Offering / Done</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                  Tenggat Pendaftaran
-                </span>
-                <div className="flex items-center justify-between bg-white border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs shadow-2xs">
-                  <div className="flex items-center gap-1.5 font-bold text-slate-700">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400 stroke-[2.2]" />
-                    <span>{formatDisplayDate(app.deadlineDate)}</span>
-                  </div>
-                  <span
-                    className={`font-extrabold flex items-center gap-1 ${
-                      countdown.status === 'urgent'
-                        ? 'text-spidey-red'
-                        : countdown.status === 'warning'
-                        ? 'text-spidey-amber'
-                        : 'text-slate-600'
-                    }`}
-                  >
-                    <Clock className="w-3 h-3 stroke-[2.2]" />
-                    {countdown.text}
-                  </span>
-                </div>
-              </div>
-            </div>
+      {/* Slide-over Clay Drawer */}
+      <aside
+        className="fixed top-0 right-0 bottom-0 w-full max-w-[500px] z-50 spidey-clay rounded-l-[30px] rounded-r-none overflow-y-auto p-6 sm:p-7 shadow-2xl transform transition-transform ease-out duration-300"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-start gap-3">
+          <div>
+            <h2 className="font-comic text-3xl sm:text-4xl text-theme-ink tracking-wide leading-none">
+              {app.companyName}
+            </h2>
+            <div className="text-theme-ink font-bold text-sm mt-1">{app.position}</div>
           </div>
-
-          {/* Drawer Body (Scrollable Content) */}
-          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-            {/* Section 1: Alur Seleksi (Interactive Stepper) */}
-            <section className="bg-white rounded-2xl p-4 sm:p-5 border-2 border-slate-200 shadow-[0_3px_0_0_#CBD5E1]">
-              <div className="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-100">
-                <div className="flex items-center space-x-2">
-                  <GitCommit className="w-4 h-4 text-spidey-blue stroke-[2.5]" />
-                  <h3 className="text-sm font-extrabold text-spidey-ink tracking-tight">
-                    Alur Seleksi Perusahaan
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setShowAddStage(!showAddStage)}
-                  className="clay-btn-secondary px-2.5 py-1 text-xs text-spidey-blue flex items-center gap-1"
-                >
-                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                  <span>Tambah Tahap</span>
-                </button>
-              </div>
-
-              {/* Add Stage Inline Form */}
-              {showAddStage && (
-                <form onSubmit={handleAddStage} className="mb-4 flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={newStageName}
-                    onChange={(e) => setNewStageName(e.target.value)}
-                    placeholder="Nama tahap (misal: Case Study Interview)..."
-                    className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-spidey-blue font-semibold"
-                    autoFocus
-                  />
-                  <button
-                    type="submit"
-                    className="clay-btn-primary px-3 py-1.5 text-xs text-yellow-300 font-extrabold"
-                  >
-                    Simpan
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddStage(false)}
-                    className="clay-btn-secondary px-2 py-1.5 text-xs text-slate-600"
-                  >
-                    Batal
-                  </button>
-                </form>
-              )}
-
-              {/* Stepper List */}
-              <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-1 before:bg-slate-300">
-                {app.selectionStages.map((stage, idx) => (
-                  <div key={stage.id} className="relative group">
-                    {/* Stepper Indicator Dot */}
-                    <button
-                      onClick={() => handleToggleStageCompleted(stage.id)}
-                      className={`absolute -left-6 top-0.5 w-6 h-6 rounded-full flex items-center justify-center transition-all ${
-                        stage.isCompleted
-                          ? 'bg-emerald-600 text-emerald-100 shadow-[0_2px_0_0_#059669]'
-                          : stage.isCurrent
-                          ? 'bg-spidey-blue text-yellow-300 ring-4 ring-spidey-blue-border shadow-[0_2px_0_0_#1E40AF]'
-                          : 'bg-white border-2 border-slate-300 hover:border-slate-500'
-                      }`}
-                      title={stage.isCompleted ? 'Tahap ini selesai' : 'Klik untuk tandai selesai'}
-                    >
-                      {stage.isCompleted ? (
-                        <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
-                      ) : stage.isCurrent ? (
-                        <Circle className="w-2.5 h-2.5 fill-current" />
-                      ) : (
-                        <span className="text-[10px] text-slate-700 font-extrabold">{idx + 1}</span>
-                      )}
-                    </button>
-
-                    {/* Stage Details */}
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0 pr-2">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-xs font-bold ${
-                              stage.isCurrent
-                                ? 'text-spidey-blue'
-                                : stage.isCompleted
-                                ? 'text-slate-500 line-through'
-                                : 'text-slate-800'
-                            }`}
-                          >
-                            {stage.name}
-                          </span>
-                          {stage.isCurrent && (
-                            <span className="text-[10px] font-extrabold bg-spidey-blue-light text-spidey-blue-dark px-2 py-0.5 rounded-md border border-spidey-blue-border">
-                              Tahap Aktif
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-1.5 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                        {!stage.isCurrent && (
-                          <button
-                            onClick={() => handleSetCurrentStage(stage.id)}
-                            className="clay-btn-secondary text-[11px] px-2 py-0.5 text-slate-700 hover:text-spidey-blue"
-                          >
-                            Jadikan Aktif
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleDeleteStage(stage.id)}
-                          className="p-1 text-slate-400 hover:text-spidey-red rounded-lg"
-                          title="Hapus tahap"
-                        >
-                          <Trash2 className="w-3.5 h-3.5 stroke-[2.2]" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {app.selectionStages.length === 0 && (
-                  <div className="text-xs text-slate-500 italic font-medium">
-                    Belum ada alur tahapan seleksi. Tambahkan tahapan seleksi pertama di atas.
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Section 2: Requirements Checklist */}
-            <section className="bg-white rounded-2xl p-4 sm:p-5 border-2 border-slate-200 shadow-[0_3px_0_0_#CBD5E1]">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b-2 border-slate-100">
-                <div className="flex items-center space-x-2">
-                  <ListChecks className="w-4 h-4 text-emerald-600 stroke-[2.5]" />
-                  <h3 className="text-sm font-extrabold text-spidey-ink tracking-tight">
-                    Requirements Checklist
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setShowAddReq(!showAddReq)}
-                  className="clay-btn-secondary px-2.5 py-1 text-xs text-emerald-700 flex items-center gap-1"
-                >
-                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                  <span>Tambah Syarat</span>
-                </button>
-              </div>
-
-              {/* Progress Summary */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
-                  <span>Kelengkapan Berkas</span>
-                  <span className={progressPercent === 100 ? 'text-emerald-700' : 'text-slate-800'}>
-                    {completedReq} dari {totalReq} ({progressPercent}%)
-                  </span>
-                </div>
-                <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
-                  <div
-                    className={`h-full rounded-full transition-all duration-300 ${
-                      progressPercent === 100 ? 'bg-emerald-600' : 'bg-spidey-blue'
-                    }`}
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-                {progressPercent === 100 && totalReq > 0 && (
-                  <div className="mt-2.5 text-xs font-bold text-emerald-800 bg-emerald-50 p-2.5 rounded-xl border-2 border-emerald-200 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 stroke-[2.5]" />
-                    <span>Semua berkas siap. Anda dapat segera mengirimkan lamaran ini.</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Add Requirement Inline Form */}
-              {showAddReq && (
-                <form onSubmit={handleAddRequirement} className="mb-3 flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={newReqLabel}
-                    onChange={(e) => setNewReqLabel(e.target.value)}
-                    placeholder="Nama syarat dokumen (misal: Surat Pengantar Kampus)..."
-                    className="flex-1 text-xs px-3 py-1.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-emerald-600 font-semibold"
-                    autoFocus
-                  />
-                  <button
-                    type="submit"
-                    className="clay-btn-primary px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 border-emerald-700 shadow-[0_3px_0_0_#047857] text-yellow-300 font-extrabold"
-                  >
-                    Simpan
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddReq(false)}
-                    className="clay-btn-secondary px-2 py-1.5 text-xs text-slate-600"
-                  >
-                    Batal
-                  </button>
-                </form>
-              )}
-
-              {/* Checklist Items */}
-              <div className="space-y-2">
-                {app.requirements.map((req) => (
-                  <div
-                    key={req.id}
-                    className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border-2 border-slate-200 hover:border-slate-300 transition-colors group"
-                  >
-                    <label className="flex items-center space-x-2.5 flex-1 cursor-pointer min-w-0 pr-2">
-                      <input
-                        type="checkbox"
-                        checked={req.isCompleted}
-                        onChange={() => handleToggleRequirement(req.id)}
-                        className="w-4 h-4 rounded text-spidey-blue focus:ring-spidey-blue border-2 border-slate-300 cursor-pointer"
-                      />
-                      <span
-                        className={`text-xs select-none truncate font-bold ${
-                          req.isCompleted
-                            ? 'line-through text-slate-400 font-normal'
-                            : 'text-slate-800'
-                        }`}
-                      >
-                        {req.label}
-                      </span>
-                    </label>
-
-                    <button
-                      onClick={() => handleDeleteRequirement(req.id)}
-                      className="p-1 text-slate-400 hover:text-spidey-red rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Hapus berkas"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 stroke-[2.2]" />
-                    </button>
-                  </div>
-                ))}
-
-                {app.requirements.length === 0 && (
-                  <div className="text-xs text-slate-500 italic font-medium">
-                    Belum ada syarat berkas. Klik 'Tambah Syarat' di atas.
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Section 3: Catatan Tambahan */}
-            <section className="bg-white rounded-2xl p-4 sm:p-5 border-2 border-slate-200 shadow-[0_3px_0_0_#CBD5E1]">
-              <div className="flex items-center space-x-2 mb-2 pb-1 border-b border-slate-100">
-                <FileText className="w-4 h-4 text-spidey-blue stroke-[2.5]" />
-                <h3 className="text-sm font-extrabold text-spidey-ink tracking-tight">
-                  Catatan Tambahan
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 font-semibold mb-2">
-                Simpan kisi-kisi tes, kontak alumni/HR, atau catatan penting lainnya:
-              </p>
-              <textarea
-                rows={4}
-                value={app.notes || ''}
-                onChange={(e) => handleNotesChange(e.target.value)}
-                placeholder="Tulis catatan di sini... otomatis tersimpan."
-                className="w-full text-xs p-3 bg-slate-50 border-2 border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:border-spidey-blue text-slate-800 font-medium leading-relaxed"
-              />
-            </section>
-          </div>
-
-          {/* Drawer Footer Actions */}
-          <div className="p-4 sm:p-5 border-t-2 border-slate-200 bg-slate-50 flex items-center justify-between">
-            <button
-              onClick={() => {
-                if (window.confirm(`Hapus lowongan ${app.companyName}?`)) {
-                  onDelete(app.id);
-                  onClose();
-                }
-              }}
-              className="clay-btn-secondary flex items-center space-x-1.5 text-xs px-3 py-2 text-spidey-red hover:border-spidey-red"
-            >
-              <Trash2 className="w-4 h-4 stroke-[2.2]" />
-              <span>Hapus Lowongan</span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="clay-btn-secondary px-5 py-2 text-xs font-bold text-slate-800"
-            >
-              Tutup Panel
-            </button>
-          </div>
+          <button onClick={onClose} className="spidey-btn px-3 py-1.5 text-xs font-extrabold flex-shrink-0">
+            Tutup
+          </button>
         </div>
-      </div>
+
+        {/* Badges Bar */}
+        <div className="mt-3 flex gap-2 flex-wrap items-center">
+          <span className="spidey-badge font-extrabold text-theme-blue">{app.workMode}</span>
+          <span className="spidey-badge">{app.locationCity}</span>
+          {countdown.status === 'urgent' ? (
+            <span
+              className="spidey-badge font-extrabold text-white"
+              style={{
+                background: 'var(--red)',
+                boxShadow: '2px 2px 6px rgba(190, 20, 30, 0.4)',
+              }}
+            >
+              {days === 0 ? 'Hari ini' : `H-${days}`}
+            </span>
+          ) : (
+            <span className="spidey-badge text-theme-blue">{days} hari lagi</span>
+          )}
+
+          {app.sourceUrl && (
+            <a
+              href={app.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="spidey-badge text-theme-blue inline-flex items-center gap-1 hover:underline cursor-pointer"
+            >
+              <ExternalLink className="w-3 h-3 stroke-[2.5]" />
+              <span>Buka sumber</span>
+            </a>
+          )}
+        </div>
+
+        {/* Status Section */}
+        <div className="mt-5">
+          <h4 className="text-sm font-extrabold text-theme-ink mb-2">Status</h4>
+          <select
+            value={app.mainStatus}
+            onChange={(e) => handleStatusChange(e.target.value as MainStatus)}
+            aria-label="Status pendaftaran"
+            className="spidey-press w-full text-theme-ink font-bold text-sm px-3.5 py-2.5 outline-none cursor-pointer"
+          >
+            {STAGES.map(([val, label]) => (
+              <option key={val} value={val}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Selection Flow Section (Interactive Stepper) */}
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-2.5">
+            <h4 className="text-sm font-extrabold text-theme-ink m-0">Alur seleksi</h4>
+            <button
+              onClick={() => setShowAddStage(!showAddStage)}
+              className="spidey-btn px-2.5 py-1 text-xs text-theme-blue font-bold flex items-center gap-1"
+            >
+              <Plus className="w-3 h-3 stroke-[2.5]" />
+              <span>Tambah</span>
+            </button>
+          </div>
+
+          {showAddStage && (
+            <form onSubmit={handleAddStage} className="mb-3 flex items-center gap-2">
+              <input
+                type="text"
+                value={newStageName}
+                onChange={(e) => setNewStageName(e.target.value)}
+                placeholder="Nama tahap (misal: Case Study)..."
+                className="spidey-press flex-1 text-xs px-3 py-2 text-theme-ink font-bold outline-none"
+                autoFocus
+              />
+              <button type="submit" className="spidey-btn spidey-btn-blue px-3 py-2 text-xs">
+                Simpan
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddStage(false)}
+                className="spidey-btn px-2 py-2 text-xs text-theme-mute"
+              >
+                Batal
+              </button>
+            </form>
+          )}
+
+          {app.selectionStages.length > 0 ? (
+            <div className="space-y-2">
+              {app.selectionStages.map((s, i) => (
+                <div
+                  key={s.id}
+                  onClick={() => handleStepClick(i)}
+                  className={`spidey-press flex gap-3 items-center p-2.5 rounded-2xl cursor-pointer transition-all group ${
+                    s.isCurrent ? 'ring-2 ring-theme-red' : ''
+                  }`}
+                >
+                  <div
+                    className={`w-7 h-7 rounded-full flex-shrink-0 grid place-items-center text-xs font-extrabold shadow-sm ${
+                      s.isCurrent
+                        ? 'bg-theme-red text-white'
+                        : s.isCompleted
+                        ? 'bg-theme-blue text-white'
+                        : 'bg-theme-card text-theme-mute'
+                    }`}
+                  >
+                    {s.isCompleted ? '✓' : i + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-theme-ink truncate">{s.name}</div>
+                    {s.isCurrent && (
+                      <small className="text-theme-red font-bold text-[11px] block">
+                        Sedang berjalan
+                      </small>
+                    )}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteStage(s.id);
+                    }}
+                    className="p-1 text-theme-mute hover:text-theme-red opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Hapus tahap"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 stroke-[2.2]" />
+                  </button>
+                </div>
+              ))}
+              <small className="text-theme-mute font-semibold block mt-1">
+                Ketuk tahap untuk menandai yang sedang berjalan.
+              </small>
+            </div>
+          ) : (
+            <div className="text-theme-mute text-center p-4 text-xs font-semibold">
+              Belum ada alur seleksi.
+            </div>
+          )}
+        </div>
+
+        {/* Requirements Section */}
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="text-sm font-extrabold text-theme-ink m-0">
+              Requirements{' '}
+              <span className="text-theme-mute font-bold">
+                {completedReq}/{totalReq}
+              </span>
+            </h4>
+            <button
+              onClick={() => setShowAddReq(!showAddReq)}
+              className="spidey-btn px-2.5 py-1 text-xs text-theme-blue font-bold flex items-center gap-1"
+            >
+              <Plus className="w-3 h-3 stroke-[2.5]" />
+              <span>Tambah</span>
+            </button>
+          </div>
+
+          {/* Progress bar */}
+          <div className="spidey-progress w-full mb-3">
+            <div
+              className={`spidey-progress-bar ${isFull ? 'spidey-progress-bar-full' : ''}`}
+              style={{
+                width: `${totalReq === 0 ? 0 : (completedReq / totalReq) * 100}%`,
+              }}
+            />
+          </div>
+
+          {showAddReq && (
+            <form onSubmit={handleAddRequirement} className="mb-3 flex items-center gap-2">
+              <input
+                type="text"
+                value={newReqLabel}
+                onChange={(e) => setNewReqLabel(e.target.value)}
+                placeholder="Nama syarat berkas..."
+                className="spidey-press flex-1 text-xs px-3 py-2 text-theme-ink font-bold outline-none"
+                autoFocus
+              />
+              <button type="submit" className="spidey-btn spidey-btn-blue px-3 py-2 text-xs">
+                Simpan
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddReq(false)}
+                className="spidey-btn px-2 py-2 text-xs text-theme-mute"
+              >
+                Batal
+              </button>
+            </form>
+          )}
+
+          {app.requirements.length > 0 ? (
+            <div className="space-y-1">
+              {app.requirements.map((r, i) => (
+                <div
+                  key={r.id}
+                  className="flex items-center justify-between p-2 rounded-xl hover:bg-theme-bg/60 group"
+                >
+                  <label className="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={r.isCompleted}
+                      onChange={() => handleToggleRequirement(i)}
+                      className="spidey-press appearance-none w-5 h-5 rounded-lg flex-shrink-0 cursor-pointer checked:bg-theme-red checked:shadow-sm"
+                    />
+                    <span
+                      className={`text-xs font-bold truncate select-none ${
+                        r.isCompleted ? 'text-theme-mute line-through' : 'text-theme-ink'
+                      }`}
+                    >
+                      {r.label}
+                    </span>
+                  </label>
+                  <button
+                    onClick={() => handleDeleteRequirement(r.id)}
+                    className="p-1 text-theme-mute hover:text-theme-red opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Hapus berkas"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 stroke-[2.2]" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-theme-mute text-center p-4 text-xs font-semibold">
+              Belum ada requirement.
+            </div>
+          )}
+        </div>
+
+        {/* Notes Section */}
+        <div className="mt-6">
+          <h4 className="text-sm font-extrabold text-theme-ink mb-2">Catatan tambahan</h4>
+          <textarea
+            rows={4}
+            value={app.notes || ''}
+            onChange={(e) => handleNotesChange(e.target.value)}
+            placeholder="Bocoran soal, kontak HR, username sosmed sumber..."
+            className="spidey-press w-full text-theme-ink font-bold text-xs p-3 outline-none resize-y"
+          />
+        </div>
+
+        {/* Delete Application */}
+        <div className="mt-7 pt-4 border-t border-theme-ink/10 flex justify-between items-center">
+          <button
+            onClick={() => {
+              if (window.confirm(`Hapus lowongan ${app.companyName}?`)) {
+                onDelete(app.id);
+                onClose();
+              }
+            }}
+            className="spidey-btn px-4 py-2 text-xs font-extrabold text-theme-red"
+          >
+            Hapus lowongan
+          </button>
+
+          <button
+            onClick={onClose}
+            className="spidey-btn px-5 py-2 text-xs font-extrabold text-theme-ink"
+          >
+            Selesai
+          </button>
+        </div>
+      </aside>
     </div>
   );
 };
