@@ -64,16 +64,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
         {/* Filters Group */}
         <div className="flex items-center flex-wrap gap-2.5">
-          {/* Work Mode Toggle Pills */}
+          {/* Work Mode Toggle Pills (High Contrast Dark Text) */}
           <div className="flex items-center bg-slate-100 p-1 rounded-xl border-2 border-slate-200">
             {workModes.map((item) => (
               <button
                 key={item.value}
                 onClick={() => setFilter((prev) => ({ ...prev, workMode: item.value }))}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`px-3 py-1 text-xs font-extrabold rounded-lg transition-all ${
                   filter.workMode === item.value
-                    ? 'bg-spidey-blue text-white shadow-[0_2px_0_0_#1E40AF]'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-spidey-ink border-2 border-spidey-blue shadow-[0_2px_0_0_#1D4ED8]'
+                    : 'text-slate-600 hover:text-slate-900 border-2 border-transparent'
                 }`}
               >
                 {item.label}

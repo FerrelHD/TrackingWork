@@ -295,7 +295,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   />
                   <button
                     type="submit"
-                    className="clay-btn-primary px-3 py-1.5 text-xs"
+                    className="clay-btn-primary px-3 py-1.5 text-xs text-yellow-300 font-extrabold"
                   >
                     Simpan
                   </button>
@@ -318,9 +318,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                       onClick={() => handleToggleStageCompleted(stage.id)}
                       className={`absolute -left-6 top-0.5 w-6 h-6 rounded-full flex items-center justify-center transition-all ${
                         stage.isCompleted
-                          ? 'bg-emerald-600 text-white shadow-[0_2px_0_0_#059669]'
+                          ? 'bg-emerald-600 text-emerald-100 shadow-[0_2px_0_0_#059669]'
                           : stage.isCurrent
-                          ? 'bg-spidey-blue text-white ring-4 ring-spidey-blue-border shadow-[0_2px_0_0_#1E40AF]'
+                          ? 'bg-spidey-blue text-yellow-300 ring-4 ring-spidey-blue-border shadow-[0_2px_0_0_#1E40AF]'
                           : 'bg-white border-2 border-slate-300 hover:border-slate-500'
                       }`}
                       title={stage.isCompleted ? 'Tahap ini selesai' : 'Klik untuk tandai selesai'}
@@ -330,7 +330,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                       ) : stage.isCurrent ? (
                         <Circle className="w-2.5 h-2.5 fill-current" />
                       ) : (
-                        <span className="text-[10px] text-slate-600 font-extrabold">{idx + 1}</span>
+                        <span className="text-[10px] text-slate-700 font-extrabold">{idx + 1}</span>
                       )}
                     </button>
 
@@ -441,7 +441,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                   />
                   <button
                     type="submit"
-                    className="clay-btn-primary px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 border-emerald-700 shadow-[0_3px_0_0_#047857]"
+                    className="clay-btn-primary px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 border-emerald-700 shadow-[0_3px_0_0_#047857] text-yellow-300 font-extrabold"
                   >
                     Simpan
                   </button>
