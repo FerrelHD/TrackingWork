@@ -7,38 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        clay: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          400: '#9CA3AF',
-          500: '#6B7280',
-          600: '#4B5563',
-          700: '#374151',
-          800: '#1F2937',
-          900: '#111827',
+        spidey: {
+          blue: '#1D4ED8',        // Classic solid Web-Blue
+          'blue-dark': '#1E40AF',
+          'blue-light': '#EFF6FF',
+          'blue-border': '#93C5FD',
+          red: '#B91C1C',         // Solid Spidey Red for urgent / danger
+          'red-light': '#FEF2F2',
+          'red-border': '#FECACA',
+          amber: '#D97706',       // Solid Spider-Sense Amber
+          'amber-light': '#FFFBEB',
+          'amber-border': '#FDE68A',
+          ink: '#0F172A',         // Solid comic ink black
+          'ink-muted': '#475569',
+          canvas: '#F1F4F9',      // Classic light paper canvas
         },
-        brand: {
-          50: '#EEF2FF',
-          100: '#E0E7FF',
-          200: '#C7D2FE',
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#6366F1',
-          600: '#4F46E5',
-          700: '#4338CA',
-          800: '#3730A3',
-          900: '#312E81',
-        }
       },
       boxShadow: {
-        'clay-card': '0 4px 14px 0 rgba(0, 0, 0, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.8)',
-        'clay-button': '0 2px 6px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)',
-        'clay-pressed': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-      }
+        // Pure solid claymorphism: outer physical shelf + soft ambient shadow (no gradient)
+        'clay-card': '0 5px 0 0 #D1D5DB, 0 8px 16px -2px rgba(15, 23, 42, 0.08)',
+        'clay-card-hover': '0 7px 0 0 #93C5FD, 0 12px 20px -2px rgba(29, 78, 216, 0.12)',
+        'clay-btn-blue': '0 4px 0 0 #1E40AF, 0 6px 12px -2px rgba(29, 78, 216, 0.25)',
+        'clay-btn-blue-active': '0 1px 0 0 #1E40AF, inset 0 2px 4px 0 rgba(15, 23, 42, 0.2)',
+        'clay-btn-white': '0 3px 0 0 #D1D5DB, 0 4px 8px -1px rgba(15, 23, 42, 0.06)',
+        'clay-btn-white-active': '0 1px 0 0 #CBD5E1, inset 0 2px 4px 0 rgba(15, 23, 42, 0.1)',
+        'clay-inset': 'inset 0 2px 4px 0 rgba(15, 23, 42, 0.06)',
+      },
     },
   },
   plugins: [],
 }
-
