@@ -146,6 +146,10 @@ export const App: React.FC = () => {
               setIsModalOpen(true);
             }}
             onDeleteApplication={handleDeleteApplication}
+            onOpenAddModal={() => {
+              setEditingApp(null);
+              setIsModalOpen(true);
+            }}
           />
         ) : (
           <KanbanView

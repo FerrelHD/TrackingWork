@@ -17,6 +17,7 @@ interface TableViewProps {
   onSelectApplication: (app: Application) => void;
   onEditApplication: (app: Application) => void;
   onDeleteApplication: (id: string) => void;
+  onOpenAddModal?: () => void;
 }
 
 export const TableView: React.FC<TableViewProps> = ({
@@ -24,6 +25,7 @@ export const TableView: React.FC<TableViewProps> = ({
   onSelectApplication,
   onEditApplication,
   onDeleteApplication,
+  onOpenAddModal,
 }) => {
   const getStatusBadge = (status: MainStatus) => {
     switch (status) {
@@ -80,11 +82,19 @@ export const TableView: React.FC<TableViewProps> = ({
       <div className="bg-white rounded-2xl border-2 border-slate-200 p-12 text-center shadow-[0_4px_0_0_#CBD5E1]">
         <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3 stroke-[1.8]" />
         <h3 className="text-base font-bold text-slate-800">
-          Tidak ada lowongan yang cocok
+          Belum ada lowongan yang dicatat
         </h3>
         <p className="text-sm text-slate-500 font-medium mt-1 max-w-sm mx-auto">
-          Coba sesuaikan kata kunci pencarian atau ubah filter untuk menemukan target magang lainnya.
+          Mulai pantau target magang Anda dari MagangHub, LinkedIn, atau media sosial.
         </p>
+        {onOpenAddModal && (
+          <button
+            onClick={onOpenAddModal}
+            className="clay-btn-primary mt-4 inline-flex items-center space-x-2 px-4 py-2 text-xs text-yellow-300 font-extrabold"
+          >
+            <span>+ Catat Lowongan Pertama</span>
+          </button>
+        )}
       </div>
     );
   }
