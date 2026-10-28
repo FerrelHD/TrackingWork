@@ -6,7 +6,7 @@ import {
   Download, 
   Upload, 
   RotateCcw,
-  Sparkles
+  Target
 } from 'lucide-react';
 import { Application } from '../types';
 import { exportBackupJSON, resetToDefaultData, saveStoredApplications } from '../utils/storage';
@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         if (Array.isArray(parsed)) {
           saveStoredApplications(parsed);
           onDataReload(parsed);
-          alert('Data berhasil di-restore dari backup!');
+          alert('Data berhasil di-restore dari backup.');
         } else {
           alert('Format file JSON tidak valid.');
         }
@@ -68,80 +68,75 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-3.5 transition-all">
+    <header className="sticky top-0 z-30 bg-white border-b-2 border-slate-200/90 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xs">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* Brand & Tagline */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-              <Sparkles className="w-5 h-5" />
+        {/* Brand & Purpose Title */}
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-spidey-blue border-2 border-spidey-blue-dark shadow-[0_3px_0_0_#1E40AF] flex items-center justify-center text-white flex-shrink-0">
+            <Target className="w-5 h-5 stroke-[2.5]" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-1.5">
+              <h1 className="text-xl font-extrabold tracking-tight text-spidey-ink">
+                MagangHub<span className="text-spidey-blue">.Tracker</span>
+              </h1>
             </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-xl font-bold tracking-tight text-slate-900">
-                  MagangHub<span className="text-indigo-600">.</span>Tracker
-                </h1>
-                <span className="text-[11px] font-semibold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200/60">
-                  MVP
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 font-medium">
-                Pantau proses pendaftaran magang tanpa ribet spreadsheet
-              </p>
-            </div>
+            <p className="text-xs text-slate-500 font-semibold">
+              Radar dan pantauan pendaftaran magang mandiri
+            </p>
           </div>
         </div>
 
         {/* View Switcher & Action CTA */}
         <div className="flex items-center flex-wrap gap-2.5 sm:gap-3">
-          {/* View Mode Toggle Pill */}
-          <div className="flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/70 shadow-inner">
+          {/* View Mode Toggle (Solid Clay Switcher) */}
+          <div className="flex items-center p-1 bg-slate-100 rounded-xl border-2 border-slate-200">
             <button
               onClick={() => setViewMode('table')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 ${
                 viewMode === 'table'
-                  ? 'bg-white text-indigo-700 shadow-sm'
+                  ? 'bg-spidey-blue text-white shadow-[0_2px_0_0_#1E40AF]'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <TableIcon className="w-3.5 h-3.5" />
+              <TableIcon className="w-3.5 h-3.5 stroke-[2.2]" />
               <span>Tabel</span>
             </button>
             <button
               onClick={() => setViewMode('kanban')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 ${
                 viewMode === 'kanban'
-                  ? 'bg-white text-indigo-700 shadow-sm'
+                  ? 'bg-spidey-blue text-white shadow-[0_2px_0_0_#1E40AF]'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
+              <LayoutGrid className="w-3.5 h-3.5 stroke-[2.2]" />
               <span>Kanban</span>
             </button>
           </div>
 
           {/* Backup / Export / Import Tools */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={handleExport}
               title="Download Cadangan JSON"
-              className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200/60 transition-colors"
+              className="clay-btn-secondary p-2 text-slate-700"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 stroke-[2.2]" />
             </button>
             <button
               onClick={handleImportClick}
               title="Restore dari JSON"
-              className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200/60 transition-colors"
+              className="clay-btn-secondary p-2 text-slate-700"
             >
-              <Upload className="w-4 h-4" />
+              <Upload className="w-4 h-4 stroke-[2.2]" />
             </button>
             <button
               onClick={handleReset}
               title="Reset ke Sampel Awal"
-              className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-slate-200/60 transition-colors"
+              className="clay-btn-secondary p-2 text-slate-700 hover:text-spidey-red hover:border-spidey-red"
             >
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className="w-4 h-4 stroke-[2.2]" />
             </button>
             <input
               type="file"
@@ -152,12 +147,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
           </div>
 
-          {/* Primary CTA */}
+          {/* Primary CTA (Solid Web-Blue Clay) */}
           <button
             onClick={onOpenAddModal}
-            className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md shadow-indigo-600/20 transition-all"
+            className="clay-btn-primary flex items-center space-x-2 px-4 py-2 text-sm"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 stroke-[2.8]" />
             <span>Catat Lowongan</span>
           </button>
         </div>
@@ -165,4 +160,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
-
