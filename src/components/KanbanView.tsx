@@ -6,6 +6,7 @@ interface KanbanViewProps {
   applications: Application[];
   onSelectApplication: (app: Application) => void;
   onUpdateStatus: (id: string, newStatus: MainStatus) => void;
+  onOpenAddModal?: () => void;
 }
 
 interface ColumnConfig {
@@ -25,6 +26,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   applications,
   onSelectApplication,
   onUpdateStatus,
+  onOpenAddModal,
 }) => {
   const [draggedAppId, setDraggedAppId] = useState<string | null>(null);
   const [activeDropColumn, setActiveDropColumn] = useState<MainStatus | null>(null);
@@ -89,8 +91,29 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
     }
   };
 
+  if (applications.length === 0) {
+    return (
+      <div className="spidey-clay p-12 sm:p-14 text-center">
+        <h3 className="font-comic text-2xl sm:text-3xl text-theme-ink tracking-wide text-comic-shadow">
+          Belum ada lowongan yang dicatat
+        </h3>
+        <p className="text-sm text-theme-mute font-bold mt-1.5 max-w-sm mx-auto">
+          Mulai pasang jaring lamaranmu. Tambahkan lowongan magang incaran pertama sekarang.
+        </p>
+        {onOpenAddModal && (
+          <button
+            onClick={onOpenAddModal}
+            className="spidey-btn spidey-btn-red mt-5 px-5 py-2.5 text-xs font-extrabold"
+          >
+            <span>+ Catat Lowongan Pertama</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex lg:grid lg:grid-cols-5 gap-4 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0">
+    <div className="flex lg:grid lg:grid-cols-5 gap-4 overflow-x-auto lg:overflow-visible pt-3 pb-6 px-4 sm:px-2 lg:px-1 -mx-4 sm:mx-0 snap-x snap-mandatory scroll-smooth">
       {COLUMNS.map((column) => {
         const columnApps = applications.filter((app) => app.mainStatus === column.id);
         const isTarget = activeDropColumn === column.id;

@@ -168,6 +168,10 @@ export const App: React.FC = () => {
               applications={filteredAndSortedApplications}
               onSelectApplication={(app) => setSelectedApp(app)}
               onUpdateStatus={handleUpdateStatus}
+              onOpenAddModal={() => {
+                setEditingApp(null);
+                setIsModalOpen(true);
+              }}
             />
           )}
         </main>
