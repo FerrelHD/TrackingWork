@@ -62,7 +62,7 @@ export const TableView: React.FC<TableViewProps> = ({
     return (
       <div className="spidey-clay p-12 text-center">
         <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4">
-          <SpideyIcon className="w-full h-full spidey-icon-embossed" />
+          <SpideyIcon className="w-full h-full" />
         </div>
         <h3 className="font-comic text-2xl sm:text-3xl text-theme-ink tracking-wide text-comic-shadow">
           Belum ada lowongan yang dicatat

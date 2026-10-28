@@ -75,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="w-16 h-16 flex-shrink-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 flex items-center justify-center"
           title="MagangHub Tracker"
         >
-          <SpideyIcon className="w-full h-full spidey-icon-shadow" />
+          <SpideyIcon className="w-full h-full" />
         </div>
 
         <div>
